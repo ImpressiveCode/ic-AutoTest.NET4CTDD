@@ -7,6 +7,8 @@ using AutoTest.Core.Notifiers;
 using System.Collections.Generic;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.DataGathererServicereference;
+using System.Text;
 
 namespace AutoTest.Core.Presenters
 {
@@ -67,6 +69,64 @@ namespace AutoTest.Core.Presenters
             trySend(message);
             if (_configuration.NotifyOnRunCompleted)
                 runNotification(getRunFinishedMessage(message.Report), message.Report);
+			
+            // run data gatherer service
+            {
+                LogData LogData = new LogData();
+                LogData.NumberOfBuildsFailed = message.Report.NumberOfBuildsFailed;
+                LogData.NumberOfBuildsSucceeded = message.Report.NumberOfBuildsSucceeded;
+                LogData.NumberOfProjectsBuilt = message.Report.NumberOfProjectsBuilt;
+                LogData.NumberOfTestsFailed = message.Report.NumberOfTestsFailed;
+                LogData.NumberOfTestsIgnored = message.Report.NumberOfTestsIgnored;
+                LogData.NumberOfTestsPassed = message.Report.NumberOfTestsPassed;
+                LogData.NumberOfTestsRan = message.Report.NumberOfTestsRan;
+				LogData.StationName = Environment.MachineName;
+				LogData.TimeStamp = DateTime.Now;
+				LogData.UserName = Environment.UserName;
+
+                try
+                {
+					DataGathererServicereference.ServiceClient serviceClient = new DataGathererServicereference.ServiceClient();
+                    serviceClient.AddLogDump(LogData);
+                }
+                catch (Exception e)
+                {
+                    // ignore for now
+                }
+            }
+
+			// run data gatherer local
+			string Separator = ";";
+			StringBuilder DumpString = new StringBuilder();
+
+			DumpString.Append(message.Report.NumberOfBuildsFailed);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfBuildsSucceeded);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfProjectsBuilt);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfTestsFailed);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfTestsIgnored);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfTestsPassed);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.NumberOfTestsRan);
+			DumpString.Append(Separator);
+			DumpString.Append(message.Report.RealTimeSpent);
+			DumpString.Append(Separator);
+			DumpString.Append(DateTime.Now.ToString("s"));
+			DumpString.AppendLine();
+
+			try
+			{
+				System.IO.File.AppendAllText(@"C:\Temp\atnet4cdd.txt", DumpString.ToString());
+			}
+			catch (Exception e)
+			{
+				// Ignore for now
+			}
+
         }
 
         public void RecievingRunInformationMessage(RunInformationMessage message)
@@ -77,6 +137,7 @@ namespace AutoTest.Core.Presenters
 
         public void RecievingBuildMessage(BuildRunMessage message)
         {
+			
             Debug.WriteDetail("handling build message");
             trySend(buildCacheMessage());
             trySend(message);
