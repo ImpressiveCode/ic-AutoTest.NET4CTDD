@@ -115,6 +115,7 @@
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />
     <Compile Include="DebugLog\Debug.cs" />
+    <Compile Include="FileSystem\DeveloperCustomIgnoreProvider.cs" />
     <Compile Include="FileSystem\ICustomIgnoreProvider.cs" />
     <Compile Include="FileSystem\IWatchPathLocator.cs" />
     <Compile Include="FileSystem\NullIgnoreProvider.cs" />
