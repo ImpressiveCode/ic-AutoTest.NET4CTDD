@@ -209,7 +209,7 @@ namespace AutoTest.Core.Configuration
         private void mergeKey(KeyValuePair<string, string> x)
         {
             _keys.RemoveAll(k => k.Key.Equals(x.Key));
-            _keys.Add(x);
+            _keys.Add(x); 
         }
 		
 		private void tryToConfigure(CoreSection core)

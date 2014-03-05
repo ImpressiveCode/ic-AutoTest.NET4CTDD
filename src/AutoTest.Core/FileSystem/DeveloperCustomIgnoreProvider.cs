@@ -1,23 +1,25 @@
 ﻿#region Usings
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using AutoTest.Core.DebugLog;
+using AutoTest.Core.Messaging;
 #endregion
 
 namespace AutoTest.Core.FileSystem
 {
 	public class DeveloperCustomIgnoreProvider : ICustomIgnoreProvider
 	{
-		#region Private variables
+		#region Private variables 
 		private readonly string[] _IgnoreValues = new[] { "AUTOTEST_IGNORE" };
+		private IMessageBus _Bus;
 		#endregion
 
-		#region Constructors
-		public DeveloperCustomIgnoreProvider()
+		#region Constructors 
+		public DeveloperCustomIgnoreProvider(IMessageBus bus)
 		{
-
+			_Bus = bus;  
+			
 		}
 		#endregion
 
@@ -29,29 +31,37 @@ namespace AutoTest.Core.FileSystem
 				return false;
 			}
 
-
 			bool Publish = true;
 
 			FileStream FileStream = null;
 
 			try
 			{
-				FileStream = File.OpenRead(filename);
+				Debug.WriteDebug("File Opened: " + filename);
 
-				TextReader TextReader = new StreamReader(FileStream);
-
-				string FirstLine = TextReader.ReadLine();
-
-				if (!string.IsNullOrEmpty(FirstLine))
+				using (TextReader TextReader = new StreamReader(FileStream))
 				{
-					FirstLine = FirstLine.Trim().ToUpperInvariant();
+					if (FileStream.CanRead && FileStream.Length > 0)
+					{
+						string FirstLine = TextReader.ReadLine();
 
-					Publish = !FirstLine.StartsWith("//") && _IgnoreValues.Any(item => FirstLine.Contains(item));
+						if (!string.IsNullOrEmpty(FirstLine))
+						{
+							FirstLine = FirstLine.Trim().ToUpperInvariant();
+
+							if (FirstLine.StartsWith("//") && _IgnoreValues.Any(item => FirstLine.Contains(item)))
+							{
+								Publish = false;
+							}
+						}
+					}
 				}
-
 			}
-			catch (Exception)
+			catch (Exception Exception)
 			{
+				Debug.WriteDebug(Exception.ToString());
+				_Bus.Publish(Exception.ToString());
+
 				Publish = false;
 			}
 			finally
