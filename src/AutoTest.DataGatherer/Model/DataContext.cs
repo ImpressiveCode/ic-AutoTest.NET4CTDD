@@ -8,6 +8,14 @@ namespace AutoTest.Net.DataGatherer.Model
 {
 	public class DataContext : DbContext
 	{
+         /// <summary>
+        /// Creates instance of BaseDatabaseContext
+        /// </summary>
+        public DataContext()
+            : base(nameOrConnectionString: "AutoTestDatabase")
+        {
+        }
+
 		public DbSet<LogDump> LogDumps
 		{
 			get;

@@ -15,11 +15,11 @@ namespace AutoTest.Core.Configuration
     public class Config : IConfiguration
     {
         private IMessageBus _bus;
-		private ILocateWriteLocation _defaultConfigLocator;
-		private string _ignoreFile;
-        private List<KeyValuePair<string, string>> _keys = new List<KeyValuePair<string,string>>();
+        private ILocateWriteLocation _defaultConfigLocator;
+        private string _ignoreFile;
+        private List<KeyValuePair<string, string>> _keys = new List<KeyValuePair<string, string>>();
         private string _overriddenSolution = null;
-		
+
         private string[] _watchDirectories;
         private List<KeyValuePair<string, string>> _buildExecutables = new List<KeyValuePair<string, string>>();
         private List<KeyValuePair<string, string>> _nunitTestRunners = new List<KeyValuePair<string, string>>();
@@ -44,36 +44,38 @@ namespace AutoTest.Core.Configuration
 
         public string MSBuildAdditionalParameters { get; private set; }
         public int MSBuildParallelBuildCount { get; private set; }
-		public string GrowlNotify { get; private set; }
-		public bool NotifyOnRunStarted { get; private set; }
-		public bool NotifyOnRunCompleted { get; private set; }
-		public string[] WatchIgnoreList { get; private set; }
-		public bool ShouldUseBinaryChangeIgnoreLists { get { return _buildExecutables.Count == 0; } }
-		public int FileChangeBatchDelay { get; private set; }
-		public string[] TestAssembliesToIgnore { get; private set; }
-		public string[] TestCategoriesToIgnore { get; private set; }
-		public string CustomOutputPath { get; private set; }
-		public bool RerunFailedTestsFirst { get; private set; }
+        public string GrowlNotify { get; private set; }
+        public bool NotifyOnRunStarted { get; private set; }
+        public bool NotifyOnRunCompleted { get; private set; }
+        public string[] WatchIgnoreList { get; private set; }
+        public bool ShouldUseBinaryChangeIgnoreLists { get { return _buildExecutables.Count == 0; } }
+        public int FileChangeBatchDelay { get; private set; }
+        public string[] TestAssembliesToIgnore { get; private set; }
+        public string[] TestCategoriesToIgnore { get; private set; }
+        public string CustomOutputPath { get; private set; }
+        public bool RerunFailedTestsFirst { get; private set; }
         public bool WhenWatchingSolutionBuildSolution { get; private set; }
         public bool UseAutoTestTestRunner { get; private set; }
         public bool UseLowestCommonDenominatorAsWatchPath { get; private set; }
         public bool WatchAllFiles { get; private set; }
         public bool RunAssembliesInParallel { get; private set; }
         public bool TestRunnerCompatibilityMode { get; private set; }
-		public long LogRecycleSize { get; private set; }
+        public long LogRecycleSize { get; private set; }
         public string[] ProjectsToIgnore { get; private set; }
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
         public bool ShouldBuildSolution { get { return File.Exists(SolutionToBuild) && WhenWatchingSolutionBuildSolution; } }
-		
+
+        public string DataGathererServiceUrl { get; private set; }
+
         public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)
         {
             _bus = bus;
-			_defaultConfigLocator = defaultConfigLocator;
-			var core = getConfiguration();
+            _defaultConfigLocator = defaultConfigLocator;
+            var core = getConfiguration();
             tryToConfigure(core);
-            WatchIgnoreList = new string[] {};
+            WatchIgnoreList = new string[] { };
         }
 
         public void Reload(string localConfiguration)
@@ -81,11 +83,11 @@ namespace AutoTest.Core.Configuration
             var core = getConfiguration();
             tryToConfigure(core);
             if (localConfiguration != null)
-			{
-	            if (File.Exists(localConfiguration))
-	                Merge(localConfiguration);
-			}
-			BuildIgnoreList(WatchPath);
+            {
+                if (File.Exists(localConfiguration))
+                    Merge(localConfiguration);
+            }
+            BuildIgnoreList(WatchPath);
             SetBuildProvider();
             AnnounceTrackerType();
         }
@@ -115,27 +117,27 @@ namespace AutoTest.Core.Configuration
                 return "";
             return setting;
         }
-		
-		public void SetBuildProvider()
-		{
-			if (_buildExecutables == null)
-				return;
-			
-			if (_buildExecutables.Count == 0)
-			{
-				FileChangeBatchDelay = 1000;
-				_bus.SetBuildProvider("NoBuild");
+
+        public void SetBuildProvider()
+        {
+            if (_buildExecutables == null)
+                return;
+
+            if (_buildExecutables.Count == 0)
+            {
+                FileChangeBatchDelay = 1000;
+                _bus.SetBuildProvider("NoBuild");
                 CustomOutputPath = Path.Combine("bin", "Debug");
-			}
-		}
-		
-		public void AnnounceTrackerType()
-		{
-			var trackerType = "file change tracking";
-			if (_buildExecutables.Count == 0)
-				trackerType = "assembly tracking";
-			_bus.Publish(new InformationMessage(string.Format("Tracker type: {0}", trackerType)));
-		}
+            }
+        }
+
+        public void AnnounceTrackerType()
+        {
+            var trackerType = "file change tracking";
+            if (_buildExecutables.Count == 0)
+                trackerType = "assembly tracking";
+            _bus.Publish(new InformationMessage(string.Format("Tracker type: {0}", trackerType)));
+        }
 
         public void SetCustomOutputPath(string path)
         {
@@ -151,42 +153,42 @@ namespace AutoTest.Core.Configuration
         {
             _overriddenSolution = null;
         }
-		
-		public void Merge(string configuratoinFile)
-		{
-			var core = getConfiguration(configuratoinFile);
+
+        public void Merge(string configuratoinFile)
+        {
+            var core = getConfiguration(configuratoinFile);
             if (core.StartPaused.WasReadFromConfig)
                 StartPaused = core.StartPaused.Value;
-			mergeVersionedItem(_buildExecutables, core.BuildExecutables);
-			mergeVersionedItem(_nunitTestRunners, core.NUnitTestRunner);
-			mergeVersionedItem(_msTestRunner, core.MSTestRunner);
-			mergeVersionedItem(_xunitTestRunner, core.XUnitTestRunner);
-			mergeVersionedItem(_mspecTestRunner, core.MSpecTestRunner);
+            mergeVersionedItem(_buildExecutables, core.BuildExecutables);
+            mergeVersionedItem(_nunitTestRunners, core.NUnitTestRunner);
+            mergeVersionedItem(_msTestRunner, core.MSTestRunner);
+            mergeVersionedItem(_xunitTestRunner, core.XUnitTestRunner);
+            mergeVersionedItem(_mspecTestRunner, core.MSpecTestRunner);
             mergeCodeEditor(core.CodeEditor);
-			if (core.DebuggingEnabled.WasReadFromConfig)
-				_debuggingEnabled = core.DebuggingEnabled.Value;
+            if (core.DebuggingEnabled.WasReadFromConfig)
+                _debuggingEnabled = core.DebuggingEnabled.Value;
             if (core.MSBuildAdditionalParameters.WasReadFromConfig)
                 MSBuildAdditionalParameters = mergeValueItem(core.MSBuildAdditionalParameters, "");
             if (core.MSBuildParallelBuildCount.WasReadFromConfig)
                 MSBuildParallelBuildCount = mergeValueItem(core.MSBuildParallelBuildCount, 0);
-			if (core.GrowlNotify.WasReadFromConfig)
-				GrowlNotify = mergeValueItem(core.GrowlNotify, null);
-			if (core.NotifyOnRunStarted.WasReadFromConfig)
-				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
-			if (core.NotifyOnRunCompleted.WasReadFromConfig)
-				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
-			if (core.TestAssembliesToIgnore.WasReadFromConfig)
-				TestAssembliesToIgnore = mergeValues(TestAssembliesToIgnore, core.TestAssembliesToIgnore);
-			if (core.TestCategoriesToIgnore.WasReadFromConfig)
-				TestCategoriesToIgnore = mergeValues(TestCategoriesToIgnore, core.TestCategoriesToIgnore);
-			if (core.WatchIgnoreFile.WasReadFromConfig)
-				_ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
-			if (core.FileChangeBatchDelay.WasReadFromConfig)
-				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
-			if (core.CustomOutputPath.WasReadFromConfig)
-				CustomOutputPath = core.CustomOutputPath.Value;
-			if (core.RerunFailedTestsFirst.WasReadFromConfig)
-				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
+            if (core.GrowlNotify.WasReadFromConfig)
+                GrowlNotify = mergeValueItem(core.GrowlNotify, null);
+            if (core.NotifyOnRunStarted.WasReadFromConfig)
+                NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
+            if (core.NotifyOnRunCompleted.WasReadFromConfig)
+                NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
+            if (core.TestAssembliesToIgnore.WasReadFromConfig)
+                TestAssembliesToIgnore = mergeValues(TestAssembliesToIgnore, core.TestAssembliesToIgnore);
+            if (core.TestCategoriesToIgnore.WasReadFromConfig)
+                TestCategoriesToIgnore = mergeValues(TestCategoriesToIgnore, core.TestCategoriesToIgnore);
+            if (core.WatchIgnoreFile.WasReadFromConfig)
+                _ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
+            if (core.FileChangeBatchDelay.WasReadFromConfig)
+                FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
+            if (core.CustomOutputPath.WasReadFromConfig)
+                CustomOutputPath = core.CustomOutputPath.Value;
+            if (core.RerunFailedTestsFirst.WasReadFromConfig)
+                RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
             if (core.WhenWatchingSolutionBuildSolution.WasReadFromConfig)
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
             if (core.UseAutoTestTestRunner.WasReadFromConfig)
@@ -199,20 +201,22 @@ namespace AutoTest.Core.Configuration
                 RunAssembliesInParallel = core.RunAssembliesInParallel.Value;
             if (core.TestRunnerCompatibilityMode.WasReadFromConfig)
                 TestRunnerCompatibilityMode = core.TestRunnerCompatibilityMode.Value;
-			if (core.LogRecycleSize.WasReadFromConfig)
+            if (core.LogRecycleSize.WasReadFromConfig)
                 LogRecycleSize = core.LogRecycleSize.Value;
             if (core.ProjectsToIgnore.WasReadFromConfig)
                 ProjectsToIgnore = mergeValues(ProjectsToIgnore, core.ProjectsToIgnore);
             core.Keys.ForEach(x => mergeKey(x));
-		}
+            if (core.DataGathererServiceUrl.WasReadFromConfig)
+                DataGathererServiceUrl = core.DataGathererServiceUrl.Value;
+        }
 
         private void mergeKey(KeyValuePair<string, string> x)
         {
             _keys.RemoveAll(k => k.Key.Equals(x.Key));
-            _keys.Add(x); 
+            _keys.Add(x);
         }
-		
-		private void tryToConfigure(CoreSection core)
+
+        private void tryToConfigure(CoreSection core)
         {
             try
             {
@@ -227,15 +231,15 @@ namespace AutoTest.Core.Configuration
                 _debuggingEnabled = core.DebuggingEnabled.Value;
                 MSBuildAdditionalParameters = core.MSBuildAdditionalParameters.Value;
                 MSBuildParallelBuildCount = core.MSBuildParallelBuildCount.Value;
-				GrowlNotify = core.GrowlNotify.Value;
-				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
-				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
-				TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
-				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
-				_ignoreFile = core.WatchIgnoreFile.Value;
-				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
-				CustomOutputPath = core.CustomOutputPath.Value;
-				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
+                GrowlNotify = core.GrowlNotify.Value;
+                NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
+                NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
+                TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
+                TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
+                _ignoreFile = core.WatchIgnoreFile.Value;
+                FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
+                CustomOutputPath = core.CustomOutputPath.Value;
+                RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
                 UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
@@ -245,6 +249,7 @@ namespace AutoTest.Core.Configuration
                 LogRecycleSize = core.LogRecycleSize.Value;
                 ProjectsToIgnore = core.ProjectsToIgnore.Value;
                 _keys = core.Keys;
+                DataGathererServiceUrl = core.DataGathererServiceUrl.Value;
             }
             catch (Exception ex)
             {
@@ -252,27 +257,27 @@ namespace AutoTest.Core.Configuration
                 throw;
             }
         }
-		
-		private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
-		{
-			if (settingToMerge.ShouldExclude)
-				return new string[] {};
-			if (settingToMerge.ShouldMerge)
-			{
-				var list = new List<string>();
-				list.AddRange(setting);
-				list.AddRange(settingToMerge.Value);
-				return list.ToArray();
-			}
-			return settingToMerge.Value;
-		}
-		
-		private string mergeValueItem(ConfigItem<string> settingToMerge, string defaultValue)
-		{
-			if (settingToMerge.ShouldExclude)
-				return defaultValue;
-			return settingToMerge.Value;
-		}
+
+        private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
+        {
+            if (settingToMerge.ShouldExclude)
+                return new string[] { };
+            if (settingToMerge.ShouldMerge)
+            {
+                var list = new List<string>();
+                list.AddRange(setting);
+                list.AddRange(settingToMerge.Value);
+                return list.ToArray();
+            }
+            return settingToMerge.Value;
+        }
+
+        private string mergeValueItem(ConfigItem<string> settingToMerge, string defaultValue)
+        {
+            if (settingToMerge.ShouldExclude)
+                return defaultValue;
+            return settingToMerge.Value;
+        }
 
         private int mergeValueItem(ConfigItem<int> settingToMerge, int defaultValue)
         {
@@ -280,57 +285,57 @@ namespace AutoTest.Core.Configuration
                 return defaultValue;
             return settingToMerge.Value;
         }
-		
-		private void mergeCodeEditor(ConfigItem<CodeEditor> settingToMerge)
-		{
-			if (!settingToMerge.WasReadFromConfig)
-				return;
-			if (settingToMerge.ShouldExclude)
-			{
-				_codeEditor = new CodeEditor("", "");
-				return;
-			}
-			_codeEditor = settingToMerge.Value;
-		}
-		
-		private void mergeVersionedItem(List<KeyValuePair<string, string>> setting, ConfigItem<KeyValuePair<string, string>[]> settingToMerge)
-		{
-			if (!settingToMerge.WasReadFromConfig)
-				return;
-			if (settingToMerge.ShouldExclude)
-			{
-				setting.Clear();
-				return;
-			}
-			if (settingToMerge.ShouldMerge)
-			{
-				foreach (var mergedItem in settingToMerge.Value)
-				{
-					setting.RemoveAll(x => x.Key.Equals(mergedItem.Key));
-					setting.Add(mergedItem);
-				}
-				return;
-			}
-			setting.Clear();
-			setting.AddRange(settingToMerge.Value);
-		}
-		
-		private CoreSection getConfiguration()
-		{
-			return getConfiguration(_defaultConfigLocator.GetConfigurationFile());
-		}
-		
-		private CoreSection getConfiguration(string configFile)
-		{
-			var core = new CoreSection();
-			if (!File.Exists(configFile))
-			{
-				Debug.ConfigurationFileMissing();
-				return core;
-			}
-			core.Read(configFile);
-			return core;
-		}
+
+        private void mergeCodeEditor(ConfigItem<CodeEditor> settingToMerge)
+        {
+            if (!settingToMerge.WasReadFromConfig)
+                return;
+            if (settingToMerge.ShouldExclude)
+            {
+                _codeEditor = new CodeEditor("", "");
+                return;
+            }
+            _codeEditor = settingToMerge.Value;
+        }
+
+        private void mergeVersionedItem(List<KeyValuePair<string, string>> setting, ConfigItem<KeyValuePair<string, string>[]> settingToMerge)
+        {
+            if (!settingToMerge.WasReadFromConfig)
+                return;
+            if (settingToMerge.ShouldExclude)
+            {
+                setting.Clear();
+                return;
+            }
+            if (settingToMerge.ShouldMerge)
+            {
+                foreach (var mergedItem in settingToMerge.Value)
+                {
+                    setting.RemoveAll(x => x.Key.Equals(mergedItem.Key));
+                    setting.Add(mergedItem);
+                }
+                return;
+            }
+            setting.Clear();
+            setting.AddRange(settingToMerge.Value);
+        }
+
+        private CoreSection getConfiguration()
+        {
+            return getConfiguration(_defaultConfigLocator.GetConfigurationFile());
+        }
+
+        private CoreSection getConfiguration(string configFile)
+        {
+            var core = new CoreSection();
+            if (!File.Exists(configFile))
+            {
+                Debug.ConfigurationFileMissing();
+                return core;
+            }
+            core.Read(configFile);
+            return core;
+        }
 
         public void ValidateSettings()
         {
@@ -340,7 +345,7 @@ namespace AutoTest.Core.Configuration
                 _bus.Publish(new WarningMessage("NUnit test runner not specified. NUnit tests will not be run."));
             if (noneExists(_msTestRunner))
                 _bus.Publish(new WarningMessage("MSTest test runner not specified. MSTest tests will not be run."));
-			if (noneExists(_xunitTestRunner))
+            if (noneExists(_xunitTestRunner))
                 _bus.Publish(new WarningMessage("XUnit test runner not specified. XUnit tests will not be run."));
             if (noneExists(_mspecTestRunner))
                 _bus.Publish(new WarningMessage("Machine.Specifications test runner not specified. Machine.Specifications tests will not be run."));
@@ -358,40 +363,40 @@ namespace AutoTest.Core.Configuration
                 sb.Append(item + "|");
             return sb.ToString();
         }
-		
-		public void BuildIgnoreListFromPath(string watchPath)
-		{
-            var file = new PathParser(_ignoreFile).ToAbsolute(watchPath);
-			
-			Debug.WriteDebug("Using ignore file {0}", file);
-			if (File.Exists(file))
-				WatchIgnoreList = getLineArrayFromFile(file, watchPath);
-			else
-				WatchIgnoreList = new string[] { };
-		}
 
-		private string[] getLineArrayFromFile(string file, string watchPath)
-		{
-			var lines = new List<string>();
-			using (var reader = new StreamReader(file))
-			{
-				string line;
-				while ((line = reader.ReadLine()) != null)
-				{
-					var trimmedLine = line.Trim();
-					if (trimmedLine.Length == 0)
-						continue;
-					if (trimmedLine.StartsWith("!"))
-						continue;
-					if (trimmedLine.StartsWith("#"))
-						continue;
+        public void BuildIgnoreListFromPath(string watchPath)
+        {
+            var file = new PathParser(_ignoreFile).ToAbsolute(watchPath);
+
+            Debug.WriteDebug("Using ignore file {0}", file);
+            if (File.Exists(file))
+                WatchIgnoreList = getLineArrayFromFile(file, watchPath);
+            else
+                WatchIgnoreList = new string[] { };
+        }
+
+        private string[] getLineArrayFromFile(string file, string watchPath)
+        {
+            var lines = new List<string>();
+            using (var reader = new StreamReader(file))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var trimmedLine = line.Trim();
+                    if (trimmedLine.Length == 0)
+                        continue;
+                    if (trimmedLine.StartsWith("!"))
+                        continue;
+                    if (trimmedLine.StartsWith("#"))
+                        continue;
                     trimmedLine = trimmedLine.Replace('\\', '/');
                     trimmedLine = getRelativePath(trimmedLine, watchPath);
-					lines.Add(trimmedLine);
-				}
-			}
-			return lines.ToArray();
-		}
+                    lines.Add(trimmedLine);
+                }
+            }
+            return lines.ToArray();
+        }
 
         private string getRelativePath(string path, string relativeTo)
         {
@@ -400,12 +405,12 @@ namespace AutoTest.Core.Configuration
                 return path.Substring(truePath.Length, path.Length - truePath.Length);
             return path;
         }
-		
+
         private bool noneExists(List<KeyValuePair<string, string>> files)
         {
-			if (files == null)
-				return true;
-			
+            if (files == null)
+                return true;
+
             foreach (var file in files)
             {
                 if (File.Exists(file.Value))
@@ -424,16 +429,16 @@ namespace AutoTest.Core.Configuration
         {
             return getVersionedSetting(version, _nunitTestRunners);
         }
-		
-		public string GetSpesificNunitTestRunner(string version)
-		{
-			if (_nunitTestRunners.Count == 0)
+
+        public string GetSpesificNunitTestRunner(string version)
+        {
+            if (_nunitTestRunners.Count == 0)
                 return null;
             int index;
             if ((index = _nunitTestRunners.FindIndex(0, b => b.Key.Equals(version))) >= 0)
                 return _nunitTestRunners[index].Value;
-			return null;
-		}
+            return null;
+        }
 
         public string MSTestRunner(string version)
         {

@@ -237,9 +237,9 @@
   </Target>
   -->
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="AutoTest.config.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DataGathererServicereference\Service.wsdl" />
     <None Include="Service References\DataGathererServicereference\Service.xsd">

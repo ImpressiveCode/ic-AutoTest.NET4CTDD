@@ -133,4 +133,6 @@
   <!-- Whether to adjust watch path to the lowest common path used by all projects -->
   <!-- included in a solution -->
   <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
+
+  <DataGathererServiceUrl>http://localhost:56399/Service.svc</DataGathererServiceUrl>
 </configuration>

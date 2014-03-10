@@ -1,7 +1,6 @@
 namespace AutoTest.Net.DataGatherer.Migrations
 {
     using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -9,7 +8,7 @@ namespace AutoTest.Net.DataGatherer.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(AutoTest.Net.DataGatherer.Model.DataContext context)

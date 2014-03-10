@@ -50,8 +50,8 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> TestRunnerCompatibilityMode { get; private set; }
         public ConfigItem<long> LogRecycleSize { get; private set; }
         public ConfigItem<string[]> ProjectsToIgnore { get; private set; }
-
         public List<KeyValuePair<string, string>> Keys { get; private set; }
+        public ConfigItem<string> DataGathererServiceUrl { get; private set; }
 
         public CoreSection()
         {
@@ -84,6 +84,7 @@ namespace AutoTest.Core.Configuration
             LogRecycleSize = new ConfigItem<long>(1024000);
             ProjectsToIgnore = new ConfigItem<string[]>(new string[] {});
             Keys = new List<KeyValuePair<string, string>>();
+            DataGathererServiceUrl = new ConfigItem<string>("");
         }
 
         public void Read(string configFile)
@@ -119,6 +120,7 @@ namespace AutoTest.Core.Configuration
             LogRecycleSize = getLongItem("configuration/LogRecycleSize", 1024000);
             ProjectsToIgnore = getValues("configuration/ShouldIgnoreProject/Project", true);
             Keys = getAllKeys("configuration/*");
+            DataGathererServiceUrl = getValueItem("configuration/DataGathererServiceUrl", "");
         }
 		
 		private bool tryLoadXml(string configFile)

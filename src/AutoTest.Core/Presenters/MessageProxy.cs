@@ -9,6 +9,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.DataGathererServicereference;
 using System.Text;
+using System.ServiceModel;
 
 namespace AutoTest.Core.Presenters
 {
@@ -69,7 +70,7 @@ namespace AutoTest.Core.Presenters
             trySend(message);
             if (_configuration.NotifyOnRunCompleted)
                 runNotification(getRunFinishedMessage(message.Report), message.Report);
-			
+
             // run data gatherer service
             {
                 LogData LogData = new LogData();
@@ -80,52 +81,69 @@ namespace AutoTest.Core.Presenters
                 LogData.NumberOfTestsIgnored = message.Report.NumberOfTestsIgnored;
                 LogData.NumberOfTestsPassed = message.Report.NumberOfTestsPassed;
                 LogData.NumberOfTestsRan = message.Report.NumberOfTestsRan;
-				LogData.StationName = Environment.MachineName;
-				LogData.TimeStamp = DateTime.Now;
-				LogData.UserName = Environment.UserName;
+                LogData.StationName = Environment.MachineName;
+                LogData.TimeStamp = DateTime.Now;
+                LogData.UserName = Environment.UserName;
 
                 try
                 {
-					DataGathererServicereference.ServiceClient serviceClient = new DataGathererServicereference.ServiceClient();
-                    serviceClient.AddLogDump(LogData);
+                    Debug.WriteDebug("Try to read service address from config");
+
+                    if (!string.IsNullOrEmpty(_configuration.DataGathererServiceUrl))
+                    {
+                        Debug.WriteDebug(string.Format("Sending log dump to {0}", _configuration.DataGathererServiceUrl));
+
+                        BasicHttpBinding Binding = new BasicHttpBinding();
+
+                        EndpointAddress Endpoint = new EndpointAddress(_configuration.DataGathererServiceUrl);
+
+                        ChannelFactory<IService> channelFactory = new ChannelFactory<IService>(Binding, Endpoint);
+
+                        IService Client = channelFactory.CreateChannel();
+
+                        Client.AddLogDump(LogData);
+
+                        ((IClientChannel)Client).Close();
+                    }
                 }
                 catch (Exception e)
                 {
-                    // ignore for now
+                    Debug.WriteDebug(e.Message);
+                    Debug.WriteDebug(e.StackTrace);
                 }
             }
 
-			// run data gatherer local
-			string Separator = ";";
-			StringBuilder DumpString = new StringBuilder();
+            // run data gatherer local
+            string Separator = ";";
+            StringBuilder DumpString = new StringBuilder();
 
-			DumpString.Append(message.Report.NumberOfBuildsFailed);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfBuildsSucceeded);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfProjectsBuilt);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfTestsFailed);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfTestsIgnored);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfTestsPassed);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.NumberOfTestsRan);
-			DumpString.Append(Separator);
-			DumpString.Append(message.Report.RealTimeSpent);
-			DumpString.Append(Separator);
-			DumpString.Append(DateTime.Now.ToString("s"));
-			DumpString.AppendLine();
+            DumpString.Append(message.Report.NumberOfBuildsFailed);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfBuildsSucceeded);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfProjectsBuilt);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfTestsFailed);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfTestsIgnored);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfTestsPassed);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.NumberOfTestsRan);
+            DumpString.Append(Separator);
+            DumpString.Append(message.Report.RealTimeSpent);
+            DumpString.Append(Separator);
+            DumpString.Append(DateTime.Now.ToString("s"));
+            DumpString.AppendLine();
 
-			try
-			{
-				System.IO.File.AppendAllText(@"C:\Temp\atnet4cdd.txt", DumpString.ToString());
-			}
-			catch (Exception e)
-			{
-				// Ignore for now
-			}
+            try
+            {
+                System.IO.File.AppendAllText(@"C:\Temp\atnet4cdd.txt", DumpString.ToString());
+            }
+            catch (Exception e)
+            {
+                // Ignore for now
+            }
 
         }
 
@@ -137,7 +155,7 @@ namespace AutoTest.Core.Presenters
 
         public void RecievingBuildMessage(BuildRunMessage message)
         {
-			
+
             Debug.WriteDetail("handling build message");
             trySend(buildCacheMessage());
             trySend(message);
