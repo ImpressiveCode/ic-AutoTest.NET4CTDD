@@ -33,7 +33,7 @@ namespace AutoTest.Core.FileSystem
 
 			bool Publish = true;
 
-			FileStream FileStream = null;
+			FileStream FileStream = new FileStream(filename, FileMode.Open);
 
 			try
 			{
