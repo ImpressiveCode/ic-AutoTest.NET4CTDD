@@ -33,10 +33,12 @@ namespace AutoTest.Core.FileSystem
 
 			bool Publish = true;
 
-			FileStream FileStream = new FileStream(filename, FileMode.Open);
+			FileStream FileStream = null;
 
 			try
 			{
+				FileStream = new System.IO.FileStream(filename, FileMode.Open);
+
 				Debug.WriteDebug("File Opened: " + filename);
 
 				using (TextReader TextReader = new StreamReader(FileStream))
