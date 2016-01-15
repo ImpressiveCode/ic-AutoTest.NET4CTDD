@@ -14,7 +14,7 @@ namespace AutoTest.VSIX
         public const int PauseEngineCommandId = 0x1104;
         public const int BuildAndTestAllProjectsCommandId = 0x1105;
 
-        public const int cmdidMyFeedbackWindowCommand  = 4358;
+        //public const int cmdidMyFeedbackWindowCommand  = 4358;
 
     }
 }

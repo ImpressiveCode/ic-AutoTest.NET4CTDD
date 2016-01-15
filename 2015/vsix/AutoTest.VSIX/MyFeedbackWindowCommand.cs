@@ -20,7 +20,7 @@ namespace AutoTest.VSIX
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = PackageCommands.cmdidMyFeedbackWindowCommand;
+        public const int CommandId = PackageCommands.FeedbackWindowCommandId;
 
         /// <summary>
         /// Command menu group (command set GUID).

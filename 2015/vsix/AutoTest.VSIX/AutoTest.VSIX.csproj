@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="ATEngine\Engine.cs" />
     <Compile Include="ATPackage.cs" />
-    <Compile Include="Commands\ATFeedbackCommand.cs" />
+    <Compile Include="Commands\ATCommands.cs" />
     <Compile Include="Commands\ICommandHandler\ShowFeedbackWindow.cs" />
     <Compile Include="FeedbackWindow.cs">
       <SubType>UserControl</SubType>

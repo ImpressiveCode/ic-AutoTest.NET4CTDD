@@ -17,7 +17,7 @@ namespace AutoTest.VSIX
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class ATFeedbackCommand
+    internal sealed class ATCommands
     {
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace AutoTest.VSIX
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ATFeedbackCommand"/> class.
+        /// Initializes a new instance of the <see cref="ATCommands"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private ATFeedbackCommand(Package package/*, DTE2 _applicationObject*/)
+        private ATCommands(Package package/*, DTE2 _applicationObject*/)
         {
             if (package == null)
             {
@@ -48,7 +48,7 @@ namespace AutoTest.VSIX
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var menuCommandID = new CommandID(GuidList.guidATPackageCmdSet, PackageCommands.FeedbackWindowCommandId);
+                var menuCommandID = new CommandID(GuidList.guidATPackageCmdSet, PackageCommands.RestartEngineCommandId);
                 var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
@@ -57,7 +57,7 @@ namespace AutoTest.VSIX
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static ATFeedbackCommand Instance
+        public static ATCommands Instance
         {
             get;
             private set;
@@ -80,7 +80,7 @@ namespace AutoTest.VSIX
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package/*, DTE2 _applicationObject*/)
         {
-            Instance = new ATFeedbackCommand(package/*, _applicationObject*/);
+            Instance = new ATCommands(package/*, _applicationObject*/);
 
         }
 

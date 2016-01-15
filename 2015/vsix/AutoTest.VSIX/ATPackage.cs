@@ -92,9 +92,13 @@ namespace AutoTest.VSIX
                 return;
             }
 
-            MenuCommandService.AddCommand(CreateMenuCommand(this.FeedbackWindowCallback, PackageCommands.FeedbackWindowCommandId));
-        }
+            //MenuCommandService.AddCommand(CreateMenuCommand(this.FeedbackWindowCallback, PackageCommands.FeedbackWindowCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.PauseEngineCallback, PackageCommands.PauseEngineCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.RestartEngineCallback, PackageCommands.RestartEngineCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.BuildAndTestAllProjectsCallback, PackageCommands.BuildAndTestAllProjectsCommandId));
 
+        }
 
         private OleMenuCommand CreateMenuCommand(EventHandler hanlder, uint cmdId)
         {
@@ -130,11 +134,27 @@ namespace AutoTest.VSIX
             }
 
         }
+        #region Callback Methods
 
-        private void FeedbackWindowCallback(object sender, EventArgs e)
+        //private void FeedbackWindowCallback(object sender, EventArgs e)
+        //{
+        //    string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.FeedbackWindowCallback()", this.GetType().FullName);
+        //    string title = "ATCommands";
+
+        //    // Show a message box to prove we were here
+        //    VsShellUtilities.ShowMessageBox(
+        //        this,
+        //        message,
+        //        title,
+        //        OLEMSGICON.OLEMSGICON_INFO,
+        //        OLEMSGBUTTON.OLEMSGBUTTON_OK,
+        //        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        //}
+
+        private void PauseEngineCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "ATFeedbackCommand";
+            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.PauseEngineCallback()", this.GetType().FullName);
+            string title = "ATCommands";
 
             // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(
@@ -146,6 +166,52 @@ namespace AutoTest.VSIX
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
 
+        private void ResumeEngineCallback(object sender, EventArgs e)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.ResumeEngineCallback()", this.GetType().FullName);
+            string title = "ATCommands";
+
+            // Show a message box to prove we were here
+            VsShellUtilities.ShowMessageBox(
+                this,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        private void RestartEngineCallback(object sender, EventArgs e)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.RestartEngineCallback()", this.GetType().FullName);
+            string title = "ATCommands";
+
+            // Show a message box to prove we were here
+            VsShellUtilities.ShowMessageBox(
+                this,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        private void BuildAndTestAllProjectsCallback(object sender, EventArgs e)
+        {
+            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.BuildAndTestAllProjectsCallback()", this.GetType().FullName);
+            string title = "ATCommands";
+
+            // Show a message box to prove we were here
+            VsShellUtilities.ShowMessageBox(
+                this,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        #endregion
 
         #endregion
     }

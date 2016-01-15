@@ -18,14 +18,11 @@
 	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup" priority="0x0600">
 		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
 	  </Group>
-	  <!--<Group guid="guidATPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-		<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
-	  </Group>-->
 	</Groups>
 
 	<Buttons>
 
-	  <Button guid="guidATPackageCmdSet" id="cmdidFeedbackToolWindowCommand" priority="0x0102" type="Button">
+	  <Button guid="guidATPackageCmdSet" id="FeedbackWindowCommandId" priority="0x0102" type="Button">
 		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
 		<Strings>
 		  <ButtonText>Feedback Window</ButtonText>
@@ -63,22 +60,16 @@
 		</Strings>
 	  </Button>
 	  
-	  <!--<Button guid="guidATPackageCmdSet" id="cmdidFeedbackToolWindowCommand" priority="0x0100" type="Button">
+	
+	  <!--<Button guid="guidATPackageCmdSet" id="cmdidMyFeedbackWindowCommand" priority="0x0100" type="Button">
 		--><!--<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />--><!--
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
-		<Icon guid="guidImages" id="bmpPic1" />
-		<Strings>
-		  <ButtonText>FeedbackToolWindow</ButtonText>
-		</Strings>
-	  </Button>-->
-	  <Button guid="guidATPackageCmdSet" id="cmdidMyFeedbackWindowCommand" priority="0x0100" type="Button">
-		<!--<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />-->
 		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
 		<Icon guid="guidImages1" id="bmpPic1" />
 		<Strings>
 		  <ButtonText>MyFeedbackWindow</ButtonText>
 		</Strings>
-	  </Button>
+	  </Button>-->
+	  
 	</Buttons>
 
 	<Bitmaps>
@@ -88,7 +79,7 @@
   </Commands>
 
   <KeyBindings>
-	<KeyBinding guid="guidATPackageCmdSet" id="cmdidFeedbackToolWindowCommand" key1="J" mod1="CONTROL" mod2="SHIFT" editor="guidVSStd97" />
+	<KeyBinding guid="guidATPackageCmdSet" id="FeedbackWindowCommandId" key1="J" mod1="CONTROL" mod2="SHIFT" editor="guidVSStd97" />
 
 	<KeyBinding guid="guidATPackageCmdSet" id="BuildAndTestAllProjectsCommandId" key1="Y" key2="A" mod1="CONTROL" mod2="SHIFT" editor="guidVSStd97" />
   </KeyBindings>
@@ -103,13 +94,12 @@
 	  <IDSymbol name="MyMenuGroup" value="0x1021" />
 	  
 	  <!-- commands definitions (must be the same as in PackageCommands class-->
-	  <!--<IDSymbol name="FeedbackWindowCommandId" value="0x1101" />-->
+	  <IDSymbol name="FeedbackWindowCommandId" value="0x1101" />
 	  <IDSymbol name="RestartEngineCommandId" value="0x1102" />
 	  <IDSymbol name="ResumeEngineCommandId" value="0x1103" />
 	  <IDSymbol name="PauseEngineCommandId" value="0x1104" />
 	  <IDSymbol name="BuildAndTestAllProjectsCommandId" value="0x1105" />
-	  <IDSymbol value="256" name="cmdidFeedbackToolWindowCommand" />
-	  <IDSymbol value="4358" name="cmdidMyFeedbackWindowCommand" />
+	  <!--<IDSymbol value="4358" name="cmdidMyFeedbackWindowCommand" />-->
 	</GuidSymbol>
 	
   
