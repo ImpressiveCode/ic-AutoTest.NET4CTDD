@@ -51,6 +51,12 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AutoTest.Core.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSWatcher">
       <HintPath>..\..\lib\FSWatcher\FSWatcher.dll</HintPath>
@@ -241,6 +247,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <None Include="AutoTest.Core.snk" />
     <None Include="Service References\DataGathererServicereference\Service.wsdl" />
     <None Include="Service References\DataGathererServicereference\Service.xsd">
       <SubType>Designer</SubType>

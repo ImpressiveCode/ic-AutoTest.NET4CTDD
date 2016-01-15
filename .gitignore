@@ -33,3 +33,4 @@ AutoTest.config.old
 *.nupkg
 /AutoTest.NET.sln.DotSettings.user
 Backup/
+2015/.vs
