@@ -15,7 +15,19 @@
 	</Menus>
 
 	<Groups>
-	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup1" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup2" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup3" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup4" priority="0x0600">
 		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
 	  </Group>
 	</Groups>
@@ -23,21 +35,21 @@
 	<Buttons>
 
 	  <Button guid="guidATPackageCmdSet" id="FeedbackWindowCommandId" priority="0x0102" type="Button">
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup1" />
 		<Strings>
 		  <ButtonText>Feedback Window</ButtonText>
 		</Strings>
 	  </Button>
 	  
 	  <Button guid="guidATPackageCmdSet" id="RestartEngineCommandId" priority="0x0103" type="Button">
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup2" />
 		<Strings>
 		  <ButtonText>Restart Engine</ButtonText>
 		</Strings>
 	  </Button>
 	  
 	  <Button guid="guidATPackageCmdSet" id="ResumeEngineCommandId" priority="0x0104" type="Button">
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup3" />
 		<CommandFlag>DynamicVisibility</CommandFlag>
 		<Strings>
 		  <ButtonText>Resume Engine</ButtonText>
@@ -45,14 +57,14 @@
 	  </Button>
 	  
 	  <Button guid="guidATPackageCmdSet" id="PauseEngineCommandId" priority="0x0105" type="Button">
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup3" />
 		<Strings>
 		  <ButtonText>Pause Engine</ButtonText>
 		</Strings>
 	  </Button>
 	  
 	  <Button guid="guidATPackageCmdSet" id="BuildAndTestAllProjectsCommandId" priority="0x0106" type="Button">
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup4" />
 		<Strings>
 		  <ButtonText>
 			<ButtonText>Build And Test All Projects</ButtonText>
@@ -63,7 +75,7 @@
 	
 	  <!--<Button guid="guidATPackageCmdSet" id="cmdidMyFeedbackWindowCommand" priority="0x0100" type="Button">
 		--><!--<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />--><!--
-		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup" />
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup1" />
 		<Icon guid="guidImages1" id="bmpPic1" />
 		<Strings>
 		  <ButtonText>MyFeedbackWindow</ButtonText>
@@ -91,7 +103,10 @@
 	<!-- This is the guid used to group the menu commands together -->
 	<GuidSymbol name="guidATPackageCmdSet" value="{f3f72632-3886-4ddb-b392-6a9008625478}">
 	  <IDSymbol name="MyMenu" value="0x1020" />
-	  <IDSymbol name="MyMenuGroup" value="0x1021" />
+	  <IDSymbol name="MyMenuGroup1" value="0x1021" />
+	  <IDSymbol name="MyMenuGroup2" value="0x1022" />
+	  <IDSymbol name="MyMenuGroup3" value="0x1023" />
+	  <IDSymbol name="MyMenuGroup4" value="0x1024" />
 	  
 	  <!-- commands definitions (must be the same as in PackageCommands class-->
 	  <IDSymbol name="FeedbackWindowCommandId" value="0x1101" />

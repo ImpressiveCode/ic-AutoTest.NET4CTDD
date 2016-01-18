@@ -79,7 +79,7 @@ namespace AutoTest.VSIX
         {
             base.Initialize();
             InitializeCommands();
-            AutoTest.VSIX.MyFeedbackWindowCommand.Initialize(this);
+            //AutoTest.VSIX.MyFeedbackWindowCommand.Initialize(this);
         }
 
         private void InitializeCommands()
@@ -92,7 +92,7 @@ namespace AutoTest.VSIX
                 return;
             }
 
-            //MenuCommandService.AddCommand(CreateMenuCommand(this.FeedbackWindowCallback, PackageCommands.FeedbackWindowCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.ShowToolWindow, PackageCommands.FeedbackWindowCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.PauseEngineCallback, PackageCommands.PauseEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.RestartEngineCallback, PackageCommands.RestartEngineCommandId));
@@ -150,6 +150,26 @@ namespace AutoTest.VSIX
         //        OLEMSGBUTTON.OLEMSGBUTTON_OK,
         //        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         //}
+
+        /// <summary>
+        /// Shows the tool window when the menu item is clicked.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event args.</param>
+        private void ShowToolWindow(object sender, EventArgs e)
+        {
+            // Get the instance number 0 of this tool window. This window is single instance so this instance
+            // is actually the only one.
+            // The last flag is set to true so that if the tool window does not exists it will be created.
+            ToolWindowPane window = this.FindToolWindow(typeof(MyFeedbackWindow), 0, true);
+            if ((null == window) || (null == window.Frame))
+            {
+                throw new NotSupportedException("Cannot create tool window");
+            }
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
 
         private void PauseEngineCallback(object sender, EventArgs e)
         {

@@ -55,16 +55,15 @@
     <Compile Include="ATPackage.cs" />
     <Compile Include="Commands\ATCommands.cs" />
     <Compile Include="Commands\ICommandHandler\ShowFeedbackWindow.cs" />
-    <Compile Include="FeedbackWindow.cs">
+    <Compile Include="Commands\UI\FeedbackWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FeedbackWindow.Designer.cs">
+    <Compile Include="Commands\UI\FeedbackWindow.Designer.cs">
       <DependentUpon>FeedbackWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Listeners\FeedbackListener.cs" />
-    <Compile Include="MyFeedbackWindow.cs" />
-    <Compile Include="MyFeedbackWindowCommand.cs" />
-    <Compile Include="MyFeedbackWindowControl.xaml.cs">
+    <Compile Include="Commands\UI\MyFeedbackWindow.cs" />
+    <Compile Include="Commands\UI\MyFeedbackWindowControl.xaml.cs">
       <DependentUpon>MyFeedbackWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PkgCmdID.cs" />
@@ -200,7 +199,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FeedbackWindow.resx">
+    <EmbeddedResource Include="Commands\UI\FeedbackWindow.resx">
       <DependentUpon>FeedbackWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
@@ -227,14 +226,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MyFeedbackWindowControl.xaml">
+    <Page Include="Commands\UI\MyFeedbackWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
