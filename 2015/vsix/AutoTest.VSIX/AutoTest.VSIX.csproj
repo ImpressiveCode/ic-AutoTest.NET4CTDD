@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="ATEngine\Engine.cs" />
     <Compile Include="ATPackage.cs" />
-    <Compile Include="Commands\ATCommands.cs" />
     <Compile Include="Commands\ICommandHandler\ShowFeedbackWindow.cs" />
     <Compile Include="Commands\UI\FeedbackWindow.cs">
       <SubType>UserControl</SubType>
@@ -61,6 +60,7 @@
     <Compile Include="Commands\UI\FeedbackWindow.Designer.cs">
       <DependentUpon>FeedbackWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ATPackageEventBinder.cs" />
     <Compile Include="Listeners\FeedbackListener.cs" />
     <Compile Include="Commands\UI\MyFeedbackWindow.cs" />
     <Compile Include="Commands\UI\MyFeedbackWindowControl.xaml.cs">
@@ -79,9 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Commands\Resources\ATFeedbackCommand.png" />
-    <Content Include="Resources\Command1.png" />
-    <Content Include="Resources\FeedbackToolWindowCommand.png" />
-    <Content Include="Resources\MyFeedbackWindowCommand.png" />
     <VSCTCompile Include="ATPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>

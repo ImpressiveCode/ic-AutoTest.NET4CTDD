@@ -6,16 +6,16 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 using EnvDTE80;
+using AutoTest.Core.DebugLog;
+using AutoTest.VS.Util.Builds;
+using EnvDTE;
 
 namespace AutoTest.VSIX
 {
@@ -42,19 +42,35 @@ namespace AutoTest.VSIX
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(AutoTest.VSIX.MyFeedbackWindow))]
-    public sealed class ATPackage : Package
+    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
+    public sealed partial class ATPackage : Package
     {
         private DTE2 _dte;
-        private OleMenuCommandService _mcs;
+
+        private OleMenuCommandService _menuCommandService;
+        private FeedbackWindow _control;
+        private VSBuildRunner _buildRunner;
+
+        public static string _WatchToken = null;
+        public static ATEngine.Engine _engine = null;
 
         private DTE2 _applicationObject
         {
-            get { return _dte ?? (_dte = ServiceProvider.GlobalProvider.GetService(typeof(DTE2)) as DTE2); }
+            get { return _dte ?? (_dte = GetService(typeof(DTE)) as DTE2); }
         }
 
         public OleMenuCommandService MenuCommandService
         {
-            get { return _mcs ?? (_mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService); }
+            get { return _menuCommandService ?? (_menuCommandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService); }
+        }
+
+        private System.IServiceProvider ServiceProvider
+        {
+            get
+            {
+                return this;
+            }
         }
 
 
@@ -78,19 +94,35 @@ namespace AutoTest.VSIX
         protected override void Initialize()
         {
             base.Initialize();
-            InitializeCommands();
+            try
+            {
+                InitializeEngine();
+                bindEvents();
+                InitializeCommands();
+                // TODO CF from NL: init buildRunner!!!
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteException(exception);
+            }
             //AutoTest.VSIX.MyFeedbackWindowCommand.Initialize(this);
+        }
+
+        private void InitializeEngine()
+        {
+            _engine = new ATEngine.Engine(null, _applicationObject);
         }
 
         private void InitializeCommands()
         {
-            //AutoTest.VSIX.ATFeedbackCommand.Initialize(this/*, _applicationObject*/);
-            //AutoTest.VSIX.Command1.Initialize(this);
 
             if (MenuCommandService == null)
             {
                 return;
             }
+
+            // TODO CF from NL: VSBuildRunner ??
+            // TODO CF from NL: CommandDispatchers RegisterHandler ??
 
             MenuCommandService.AddCommand(CreateMenuCommand(this.ShowToolWindow, PackageCommands.FeedbackWindowCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
@@ -134,6 +166,7 @@ namespace AutoTest.VSIX
             }
 
         }
+
         #region Callback Methods
 
         //private void FeedbackWindowCallback(object sender, EventArgs e)
@@ -169,6 +202,8 @@ namespace AutoTest.VSIX
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+            //_engine = 
         }
 
         private void PauseEngineCallback(object sender, EventArgs e)

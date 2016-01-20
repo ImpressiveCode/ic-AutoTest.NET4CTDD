@@ -9,6 +9,7 @@ using EnvDTE80;
 using AutoTest.VS.Util.Debugger;
 using EnvDTE;
 using AutoTest.VS.Util.Navigation;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.VSIX
 {
@@ -71,8 +72,9 @@ namespace AutoTest.VSIX
             {
                 new TypeNavigation().GoToType(_application, e.Assembly, e.TypeName);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
+                Debug.WriteException(exception);
             }
         }
 
