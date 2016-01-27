@@ -83,11 +83,6 @@
 	  </Button>-->
 	  
 	</Buttons>
-
-	<Bitmaps>
-	  <Bitmap guid="guidImages" href="Resources\FeedbackToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
-	  <Bitmap guid="guidImages1" href="Resources\MyFeedbackWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
-	</Bitmaps>
   </Commands>
 
   <KeyBindings>

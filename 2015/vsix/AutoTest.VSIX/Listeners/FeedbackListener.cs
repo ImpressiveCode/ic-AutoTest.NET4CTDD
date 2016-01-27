@@ -8,9 +8,9 @@ namespace AutoTest.VSIX.Listeners
 {
     class FeedbackListener : IMessageForwarder
     {
-        private FeedbackWindow _window;
+        private NewFeedbackWindowControl _window;
 
-        public FeedbackListener(FeedbackWindow window)
+        public FeedbackListener(NewFeedbackWindowControl window)
         {
             _window = window;
         }

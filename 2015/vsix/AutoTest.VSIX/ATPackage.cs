@@ -41,7 +41,7 @@ namespace AutoTest.VSIX
     [Guid(GuidList.guidATPackageString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(AutoTest.VSIX.MyFeedbackWindow))]
+    [ProvideToolWindow(typeof(AutoTest.VSIX.FeedbackWindowToolPane))]
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     public sealed partial class ATPackage : Package
@@ -49,7 +49,7 @@ namespace AutoTest.VSIX
         private DTE2 _dte;
 
         private OleMenuCommandService _menuCommandService;
-        private FeedbackWindow _control;
+        private NewFeedbackWindowControl _control;
         private VSBuildRunner _buildRunner;
 
         public static string _WatchToken = null;
@@ -169,21 +169,6 @@ namespace AutoTest.VSIX
 
         #region Callback Methods
 
-        //private void FeedbackWindowCallback(object sender, EventArgs e)
-        //{
-        //    string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.FeedbackWindowCallback()", this.GetType().FullName);
-        //    string title = "ATCommands";
-
-        //    // Show a message box to prove we were here
-        //    VsShellUtilities.ShowMessageBox(
-        //        this,
-        //        message,
-        //        title,
-        //        OLEMSGICON.OLEMSGICON_INFO,
-        //        OLEMSGBUTTON.OLEMSGBUTTON_OK,
-        //        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-        //}
-
         /// <summary>
         /// Shows the tool window when the menu item is clicked.
         /// </summary>
@@ -194,7 +179,9 @@ namespace AutoTest.VSIX
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.FindToolWindow(typeof(MyFeedbackWindow), 0, true);
+            //ToolWindowPane window = this.FindToolWindow(typeof(MyFeedbackWindow), 0, true);
+            ToolWindowPane window = this.FindToolWindow(typeof(FeedbackWindowToolPane), 0, true);
+
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");
@@ -203,6 +190,7 @@ namespace AutoTest.VSIX
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
 
+            _control = (NewFeedbackWindowControl)window.Content;
             //_engine = 
         }
 

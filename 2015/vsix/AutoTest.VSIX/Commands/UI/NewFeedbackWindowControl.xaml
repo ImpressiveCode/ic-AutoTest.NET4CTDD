@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AutoTest.VSIX.MyFeedbackWindowControl"
+﻿<UserControl x:Class="AutoTest.VSIX.NewFeedbackWindowControl"
              xmlns:at="clr-namespace:AutoTest.VSIX"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

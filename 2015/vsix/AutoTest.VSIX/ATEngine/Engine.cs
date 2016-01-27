@@ -25,7 +25,7 @@ namespace AutoTest.VSIX.ATEngine
         private string _watchToken;
         private string _configuredCustomOutput;
         private IDirectoryWatcher _watcher;
-        private FeedbackWindow _window;
+        private NewFeedbackWindowControl _window;         // TODO CF from NL: change the type to corresponding one
         private DTE2 _application;
 
         public bool IsRunning
@@ -41,7 +41,7 @@ namespace AutoTest.VSIX.ATEngine
         public List<OnDemandRun> LastTestRun { get; private set; }
         public CacheTestMessage LastDebugSession { get; private set; }
 
-        public Engine(FeedbackWindow window, DTE2 application)
+        public Engine(NewFeedbackWindowControl window, DTE2 application)
         {
             _window = window;
             _application = application;

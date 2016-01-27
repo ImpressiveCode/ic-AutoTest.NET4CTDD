@@ -62,9 +62,9 @@
     </Compile>
     <Compile Include="ATPackageEventBinder.cs" />
     <Compile Include="Listeners\FeedbackListener.cs" />
-    <Compile Include="Commands\UI\MyFeedbackWindow.cs" />
-    <Compile Include="Commands\UI\MyFeedbackWindowControl.xaml.cs">
-      <DependentUpon>MyFeedbackWindowControl.xaml</DependentUpon>
+    <Compile Include="Commands\UI\FeedbackWindowToolPane.cs" />
+    <Compile Include="Commands\UI\NewFeedbackWindowControl.xaml.cs">
+      <DependentUpon>NewFeedbackWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -223,7 +223,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Commands\UI\MyFeedbackWindowControl.xaml">
+    <Page Include="Commands\UI\NewFeedbackWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

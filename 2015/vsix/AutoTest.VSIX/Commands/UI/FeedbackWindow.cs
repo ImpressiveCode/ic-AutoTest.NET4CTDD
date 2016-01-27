@@ -78,15 +78,15 @@ namespace AutoTest.VSIX
             }
         }
 
-        public void PrepareForFocus()
-        {
-            runFeedback.PrepareForFocus();
-        }
+        //public void PrepareForFocus()
+        //{
+        //    runFeedback.PrepareForFocus();
+        //}
 
-        public bool IsInFocus()
-        {
-            return runFeedback.IsInFocus();
-        }
+        //public bool IsInFocus()
+        //{
+        //    return runFeedback.IsInFocus();
+        //}
 
         public void Clear()
         {

@@ -22,19 +22,20 @@ namespace AutoTest.VSIX
     /// </para>
     /// </remarks>
     [Guid("bea2d629-798e-4376-98e0-b748f089eaaf")]
-    public class MyFeedbackWindow : ToolWindowPane
+    public class FeedbackWindowToolPane : ToolWindowPane
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MyFeedbackWindow"/> class.
+        /// Initializes a new instance of the <see cref="FeedbackWindowToolPane"/> class.
         /// </summary>
-        public MyFeedbackWindow() : base(null)
+        public FeedbackWindowToolPane() : base(null)
         {
             this.Caption = "AutoTest.Net";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new MyFeedbackWindowControl();
+            this.Content = new NewFeedbackWindowControl();
+            //this.Content = new FeedbackWindow();
         }
     }
 }
