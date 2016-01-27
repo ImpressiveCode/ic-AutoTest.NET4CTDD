@@ -26,11 +26,12 @@ namespace AutoTest.VSIX.ATEngine
         private string _configuredCustomOutput;
         private IDirectoryWatcher _watcher;
         private NewFeedbackWindowControl _window;         // TODO CF from NL: change the type to corresponding one
+        private FeedbackWindow _control;
         private DTE2 _application;
 
         public bool IsRunning
-        { 
-            get 
+        {
+            get
             {
                 if (_watcher == null)
                     return false;
@@ -41,9 +42,9 @@ namespace AutoTest.VSIX.ATEngine
         public List<OnDemandRun> LastTestRun { get; private set; }
         public CacheTestMessage LastDebugSession { get; private set; }
 
-        public Engine(NewFeedbackWindowControl window, DTE2 application)
+        public Engine(FeedbackWindow control, DTE2 application)
         {
-            _window = window;
+            _control = control;
             _application = application;
         }
 
@@ -73,22 +74,22 @@ namespace AutoTest.VSIX.ATEngine
             BootStrapper.InitializeCache(_watchToken);
             BootStrapper.Services
                 .Locate<IMessageProxy>()
-                .SetMessageForwarder(new FeedbackListener(_window));
+                .SetMessageForwarder(new FeedbackListener(_control));
 
             _configuredCustomOutput = BootStrapper.Services.Locate<IConfiguration>().CustomOutputPath;
             _watcher = BootStrapper.Services.Locate<IDirectoryWatcher>();
             _watcher.Watch(_watchToken);
-            _window.DebugTest += new EventHandler<UI.DebugTestArgs>(_window_DebugTest);
-            _window.SetMessageBus(BootStrapper.Services.Locate<IMessageBus>());
+            _control.DebugTest += new EventHandler<UI.DebugTestArgs>(_window_DebugTest);
+            _control.SetMessageBus(BootStrapper.Services.Locate<IMessageBus>());
             setCustomOutputPath();
-            _window.Clear();
+            _control.Clear();
         }
 
         public void Pause()
         {
             _watcher.Pause();
             setCustomOutputPath();
-            _window.SetText("Engine is paused and will not detect changes");
+            _control.SetText("Engine is paused and will not detect changes");
         }
 
         public void Resume()
@@ -96,12 +97,12 @@ namespace AutoTest.VSIX.ATEngine
             if (_watcher.IsPaused)
                 _watcher.Resume();
             setCustomOutputPath();
-            _window.SetText("Engine is running and waiting for changes");
+            _control.SetText("Engine is running and waiting for changes");
         }
 
         public void Shutdown()
         {
-            _window.DebugTest -= _window_DebugTest;
+            _control.DebugTest -= _window_DebugTest;
             _watcher.Dispose();
             BootStrapper.ShutDown();
         }

@@ -49,8 +49,10 @@ namespace AutoTest.VSIX
         private DTE2 _dte;
 
         private OleMenuCommandService _menuCommandService;
-        private NewFeedbackWindowControl _control;
+        private NewFeedbackWindowControl _toolWindow;
+        private FeedbackWindow _control;
         private VSBuildRunner _buildRunner;
+        private ToolWindowPane _window;
 
         public static string _WatchToken = null;
         public static ATEngine.Engine _engine = null;
@@ -96,7 +98,7 @@ namespace AutoTest.VSIX
             base.Initialize();
             try
             {
-                InitializeEngine();
+                SetEngine();
                 bindEvents();
                 InitializeCommands();
                 // TODO CF from NL: init buildRunner!!!
@@ -108,9 +110,21 @@ namespace AutoTest.VSIX
             //AutoTest.VSIX.MyFeedbackWindowCommand.Initialize(this);
         }
 
-        private void InitializeEngine()
+        private void SetEngine()        // TODO CF from NL: fix throwing exception every time during the first load.
         {
-            _engine = new ATEngine.Engine(null, _applicationObject);
+            try
+            {
+                if (_control != null)
+                {
+                    _engine = new ATEngine.Engine(_control, _applicationObject);
+                }
+                else _engine = new ATEngine.Engine(null, _applicationObject);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteException(exception);
+            }
+            
         }
 
         private void InitializeCommands()
@@ -144,7 +158,7 @@ namespace AutoTest.VSIX
         {
             var command = sender as OleMenuCommand;
 
-            if(command == null)
+            if (command == null)
             {
                 return;
             }
@@ -176,22 +190,22 @@ namespace AutoTest.VSIX
         /// <param name="e">The event args.</param>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            //ToolWindowPane window = this.FindToolWindow(typeof(MyFeedbackWindow), 0, true);
-            ToolWindowPane window = this.FindToolWindow(typeof(FeedbackWindowToolPane), 0, true);
+            _window = this.FindToolWindow(typeof(FeedbackWindowToolPane), 0, true);
 
-            if ((null == window) || (null == window.Frame))
+            if ((null == _window) || (null == _window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            IVsWindowFrame windowFrame = (IVsWindowFrame)_window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
 
-            _control = (NewFeedbackWindowControl)window.Content;
-            //_engine = 
+            if (_window.Content != null)
+            {
+                _toolWindow = _window.Content as NewFeedbackWindowControl;
+                _control = _toolWindow.WindowsFormsHost.Child as FeedbackWindow;
+            }
+            
         }
 
         private void PauseEngineCallback(object sender, EventArgs e)

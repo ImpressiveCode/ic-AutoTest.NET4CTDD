@@ -72,11 +72,9 @@ namespace AutoTest.VSIX
             try
             {
                 StartFeedbackWindow();
-
-                // execute command AutoTest.VSAddin.Connect.AutoTestNet_FeedbackWindow - show feedback window?
-                //_applicationObject.ExecuteCommand("AutoTest.Net.FeedbackWindow", "");
+                
                 _WatchToken = _applicationObject.Solution.FullName;
-                _engine = new ATEngine.Engine(_control, _applicationObject);
+                SetEngine();
                 _engine.Bootstrap(_WatchToken);
 
                 if (_engine.IsRunning)
@@ -94,13 +92,7 @@ namespace AutoTest.VSIX
         private void StartFeedbackWindow()
         {
             var commandId = new System.ComponentModel.Design.CommandID(GuidList.guidATPackageCmdSet, (int)PackageCommands.FeedbackWindowCommandId);
-            if (MenuCommandService.GlobalInvoke(commandId))
-            {
-                //find the tool window
-                //return the tool window
-            }
-            FeedbackWindow feedbackWindow;
-            //get the instance of feedback window somehow or make the changes in enginr not to use this (but it might be imposible)
+            MenuCommandService.GlobalInvoke(commandId);
         }
 
         private void _solutionEvents_AfterClosing()

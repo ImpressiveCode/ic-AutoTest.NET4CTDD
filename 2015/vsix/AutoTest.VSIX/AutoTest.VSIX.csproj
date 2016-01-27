@@ -54,13 +54,13 @@
     <Compile Include="ATEngine\Engine.cs" />
     <Compile Include="ATPackage.cs" />
     <Compile Include="Commands\ICommandHandler\ShowFeedbackWindow.cs" />
+    <Compile Include="ATPackageEventBinder.cs" />
     <Compile Include="Commands\UI\FeedbackWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Commands\UI\FeedbackWindow.Designer.cs">
       <DependentUpon>FeedbackWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ATPackageEventBinder.cs" />
     <Compile Include="Listeners\FeedbackListener.cs" />
     <Compile Include="Commands\UI\FeedbackWindowToolPane.cs" />
     <Compile Include="Commands\UI\NewFeedbackWindowControl.xaml.cs">

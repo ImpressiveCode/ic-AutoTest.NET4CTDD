@@ -8,16 +8,16 @@ namespace AutoTest.VSIX.Listeners
 {
     class FeedbackListener : IMessageForwarder
     {
-        private NewFeedbackWindowControl _window;
+        private FeedbackWindow _control;
 
-        public FeedbackListener(NewFeedbackWindowControl window)
+        public FeedbackListener(FeedbackWindow control)
         {
-            _window = window;
+            _control = control;
         }
 
         public void Forward(object message)
         {
-            _window.Consume(message);
+            _control.Consume(message);
         }
     }
 }

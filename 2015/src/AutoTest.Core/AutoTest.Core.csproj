@@ -58,8 +58,9 @@
     <AssemblyOriginatorKeyFile>AutoTest.Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSWatcher">
-      <HintPath>..\..\lib\FSWatcher\FSWatcher.dll</HintPath>
+    <Reference Include="FSWatcher, Version=1.0.5870.19553, Culture=neutral, PublicKeyToken=accc58e03123d8e5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\FSWatcherSigned\FSWatcher.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
