@@ -98,16 +98,15 @@ namespace AutoTest.VSIX
             base.Initialize();
             try
             {
-                SetEngine();
-                bindEvents();
-                InitializeCommands();
+                this.SetEngine();
+                this.bindEvents();
+                this.InitializeCommands();
                 // TODO CF from NL: init buildRunner!!!
             }
             catch (Exception exception)
             {
                 Debug.WriteException(exception);
             }
-            //AutoTest.VSIX.MyFeedbackWindowCommand.Initialize(this);
         }
 
         private void SetEngine()        // TODO CF from NL: fix throwing exception every time during the first load.
@@ -124,7 +123,6 @@ namespace AutoTest.VSIX
             {
                 Debug.WriteException(exception);
             }
-            
         }
 
         private void InitializeCommands()
@@ -138,7 +136,7 @@ namespace AutoTest.VSIX
             // TODO CF from NL: VSBuildRunner ??
             // TODO CF from NL: CommandDispatchers RegisterHandler ??
 
-            MenuCommandService.AddCommand(CreateMenuCommand(this.ShowToolWindow, PackageCommands.FeedbackWindowCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(this.ShowOrHideToolWindow, PackageCommands.FeedbackWindowCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.PauseEngineCallback, PackageCommands.PauseEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.RestartEngineCallback, PackageCommands.RestartEngineCommandId));
@@ -163,19 +161,16 @@ namespace AutoTest.VSIX
                 return;
             }
 
-            //set visibility here
+            // set visibility here
             switch (command.CommandID.ID)
             {
                 case PackageCommands.ResumeEngineCommandId:
-                    //if engine is paused then make active
                     break;
 
                 case PackageCommands.PauseEngineCommandId:
-                    //if engine is started then make it active
                     break;
 
                 case PackageCommands.BuildAndTestAllProjectsCommandId:
-                    //if engine is started then make it active
                     break;
             }
 
@@ -188,7 +183,7 @@ namespace AutoTest.VSIX
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        private void ShowToolWindow(object sender, EventArgs e)
+        private void ShowOrHideToolWindow(object sender, EventArgs e)
         {
             _window = this.FindToolWindow(typeof(FeedbackWindowToolPane), 0, true);
 
@@ -198,74 +193,42 @@ namespace AutoTest.VSIX
             }
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)_window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+            if (windowFrame.IsVisible() == VSConstants.S_OK)
+            {
+                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Hide());
+            }
+            else
+            {
+                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            }
 
             if (_window.Content != null)
             {
                 _toolWindow = _window.Content as NewFeedbackWindowControl;
                 _control = _toolWindow.WindowsFormsHost.Child as FeedbackWindow;
-            }
-            
+            }       
         }
-
+        
         private void PauseEngineCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.PauseEngineCallback()", this.GetType().FullName);
-            string title = "ATCommands";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            _engine.Pause();
         }
 
         private void ResumeEngineCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.ResumeEngineCallback()", this.GetType().FullName);
-            string title = "ATCommands";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            _engine.Resume();
         }
 
         private void RestartEngineCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.RestartEngineCallback()", this.GetType().FullName);
-            string title = "ATCommands";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            _engine.Shutdown();
+            _engine.Resume();
         }
 
         private void BuildAndTestAllProjectsCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.BuildAndTestAllProjectsCallback()", this.GetType().FullName);
-            string title = "ATCommands";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            _engine.BuildAndTestAll();
         }
 
         #endregion
