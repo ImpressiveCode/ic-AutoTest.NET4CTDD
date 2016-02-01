@@ -16,6 +16,7 @@ using EnvDTE80;
 using AutoTest.Core.DebugLog;
 using AutoTest.VS.Util.Builds;
 using EnvDTE;
+using System.IO;
 
 namespace AutoTest.VSIX
 {
@@ -54,8 +55,8 @@ namespace AutoTest.VSIX
         private VSBuildRunner _buildRunner;
         private ToolWindowPane _window;
 
-        public static string _WatchToken = null;
-        public static ATEngine.Engine _engine = null;
+        public static string _WatchToken;
+        public static ATEngine.Engine _engine;
 
         private DTE2 _applicationObject
         {
@@ -207,31 +208,51 @@ namespace AutoTest.VSIX
             {
                 _toolWindow = _window.Content as NewFeedbackWindowControl;
                 _control = _toolWindow.WindowsFormsHost.Child as FeedbackWindow;
-            }       
+            }
         }
-        
+
         private void PauseEngineCallback(object sender, EventArgs e)
         {
-            _engine.Pause();
+            if (_engine.IsRunning)
+            {
+                _engine.Pause(); 
+            }
         }
 
         private void ResumeEngineCallback(object sender, EventArgs e)
         {
-            _engine.Resume();
+            if (!_engine.IsRunning)
+            {
+                _engine.Resume();
+            }
         }
 
         private void RestartEngineCallback(object sender, EventArgs e)
         {
-            _engine.Shutdown();
-            _engine.Resume();
+            if (Directory.Exists(getWatchDirectory()))
+            {
+                _solutionEvents_AfterClosing();
+                System.Threading.Thread.Sleep(500);
+                _solutionEvents_Opened();
+            }
         }
 
         private void BuildAndTestAllProjectsCallback(object sender, EventArgs e)
         {
-            _engine.BuildAndTestAll();
+            if (_engine.IsRunning)
+            {
+                _engine.BuildAndTestAll();
+            }
         }
 
         #endregion
+
+        private string getWatchDirectory()
+        {
+            if (_WatchToken == null)
+                return "";
+            return Path.GetDirectoryName(_WatchToken);
+        }
 
         #endregion
     }

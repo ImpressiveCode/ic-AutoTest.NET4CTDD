@@ -6,6 +6,7 @@ namespace AutoTest.VS.Util.CommandHandling
     public class CommandDispatcher
     {
         private readonly Dictionary<string, ICommandHandler> handlers = new Dictionary<string, ICommandHandler>();
+
         public void RegisterHandler(ICommandHandler handler)
         {
             if (handlers.ContainsKey(handler.Name)) return;
@@ -19,16 +20,16 @@ namespace AutoTest.VS.Util.CommandHandling
                 handler.Exec(ExecuteOption, ref VariantIn, ref VariantOut, ref Handled);
         }
 
-        private ICommandHandler GetHandler(string name)
-        {
-            return handlers[name];
-        }
-
         public void QueryStatus(string commandName, vsCommandStatusTextWanted NeededText, ref vsCommandStatus StatusOption, ref object CommandText)
         {
             var handler = GetHandler(commandName);
             if (handler != null)
                 handler.QueryStatus(NeededText, ref StatusOption, ref CommandText);
+        }
+
+        private ICommandHandler GetHandler(string name)
+        {
+            return handlers[name];
         }
     }
 }
