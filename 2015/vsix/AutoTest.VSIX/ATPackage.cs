@@ -149,11 +149,11 @@ namespace AutoTest.VSIX
         {
             var menuCommandID = new CommandID(GuidList.guidATPackageCmdSet, (int)cmdId);
             var menuItem = new OleMenuCommand(hanlder, menuCommandID);
-            menuItem.BeforeQueryStatus += MenuItem_BeforeQueryStatus;
+            menuItem.BeforeQueryStatus += MenuItem_ControlCommandVisibility;
             return menuItem;
         }
 
-        private void MenuItem_BeforeQueryStatus(object sender, EventArgs e)
+        private void MenuItem_ControlCommandVisibility(object sender, EventArgs e)
         {
             var command = sender as OleMenuCommand;
 
@@ -162,19 +162,29 @@ namespace AutoTest.VSIX
                 return;
             }
 
-            // set visibility here
-            switch (command.CommandID.ID)
+            if (_applicationObject.Solution.IsOpen)       //solution open
             {
-                case PackageCommands.ResumeEngineCommandId:
-                    break;
+                switch (command.CommandID.ID)
+                {
+                    case PackageCommands.RestartEngineCommandId:
+                    case PackageCommands.BuildAndTestAllProjectsCommandId:
+                        command.Enabled = true;
+                        break;
 
-                case PackageCommands.PauseEngineCommandId:
-                    break;
+                    case PackageCommands.ResumeEngineCommandId:
+                        if (!_engine.IsRunning) command.Enabled = true;
+                        break;
 
-                case PackageCommands.BuildAndTestAllProjectsCommandId:
-                    break;
+                    case PackageCommands.PauseEngineCommandId:
+                        if (_engine.IsRunning) command.Enabled = true;
+                        break;
+                }
             }
-
+            else if (command.CommandID.ID != PackageCommands.FeedbackWindowCommandId)  // not feedback 
+            {
+                //disable command
+                command.Enabled = false;
+            }
         }
 
         #region Callback Methods
