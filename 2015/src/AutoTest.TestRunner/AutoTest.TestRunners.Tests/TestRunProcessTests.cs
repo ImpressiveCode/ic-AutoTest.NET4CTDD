@@ -12,28 +12,31 @@ namespace AutoTest.TestRunners.Tests
     [TestFixture]
     public class TestRunProcessTests
     {
-        //[Test]
-        //public void Should_run_tests()
-        //{
-        //    return;
-        //    var options = new RunOptions();
-        //    var runner = new RunnerOptions("NUnit");
-        //    options.AddTestRun(runner);
-        //    runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.NUnit.Tests.TestResource\bin\Debug\AutoTest.TestRunners.NUnit.Tests.TestResource.dll"));
-        //    runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\ClassLibrary1-v40\ClassLibrary1-v40\bin\AutoTest.Net\ClassLibrary1-v40.dll"));
-        //    runner = new RunnerOptions("XUnit");
-        //    options.AddTestRun(runner);
-        //    runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.XUnit.Tests.TestResource\bin\AutoTest.Net\AutoTest.TestRunners.XUnit.Tests.TestResource.dll"));
-        //    var process = new TestRunProcess(new feedback());
-        //    var results = process.ProcessTestRuns(options);
+        [Test]
+        public void Should_run_tests()
+        {
+            return;
+            var options = new RunOptions();
+            var runner = new RunnerOptions("NUnit");
+            options.AddTestRun(runner);
+            //runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.NUnit.Tests.TestResource\bin\Debug\AutoTest.TestRunners.NUnit.Tests.TestResource.dll"));
+            runner.AddAssembly(new AssemblyOptions(@"C:\Users\Natalia\Documents\Repos\ic-AutoTest.NET4CTDD\2015\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.NUnit.Tests.TestResource\bin\Debug\AutoTest.TestRunners.NUnit.Tests.TestResource.dll"));
+            runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\ClassLibrary1-v40\ClassLibrary1-v40\bin\AutoTest.Net\ClassLibrary1-v40.dll"));
+            //runner.AddAssembly(new AssemblyOptions(@"C:\Users\Natalia\Documents\Visual Studio 2015\Projects\ClassLibrary1\ClassLibrary1\bin\Debug\ClassLibrary1.dll"));
+            //runner = new RunnerOptions("XUnit");
+            runner = new RunnerOptions("MSTest");
+            options.AddTestRun(runner);
+            runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.XUnit.Tests.TestResource\bin\AutoTest.Net\AutoTest.TestRunners.XUnit.Tests.TestResource.dll"));
+            var process = new TestRunProcess(new feedback());
+            var results = process.ProcessTestRuns(options);
 
-        //    var sb = new StringBuilder();
-        //    sb.AppendLine("");
-        //    foreach (var result in results)
-        //        sb.AppendLine(result.Runner + ", " + result.TestName + ", " + result.Message);
+            var sb = new StringBuilder();
+            sb.AppendLine("");
+            foreach (var result in results)
+                sb.AppendLine(result.Runner + ", " + result.TestName + ", " + result.Message);
 
-        //    throw new Exception(sb.ToString());
-        //}
+            throw new Exception(sb.ToString());
+        }
     }
 
     class feedback : ITestRunProcessFeedback

@@ -65,7 +65,7 @@ namespace AutoTest.TestRunners.Shared
             _compatabilityMode = true;
             return this;
         }
-		 
+
         public void Start()
         {
             _executable = getExecutable();
@@ -84,6 +84,7 @@ namespace AutoTest.TestRunners.Shared
 
         private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
+
             var channel = Guid.NewGuid().ToString();
             var listener = startChannelListener(channel);
             var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", _input, _output, channel);
@@ -95,23 +96,33 @@ namespace AutoTest.TestRunners.Shared
                 arguments += " --compatibility-mode";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
-            _proc = new Process();
-            _proc.StartInfo = startInfo;
-			if (OS.IsPosix)
-			{
-				_proc.StartInfo.FileName = "mono";
-				_proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
-			}
-			else
-			{
-            	_proc.StartInfo.FileName = _executable;
-				_proc.StartInfo.Arguments = arguments;
-			}
-            _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            _proc.StartInfo.UseShellExecute = !doNotshellExecute;
-            _proc.StartInfo.CreateNoWindow = true;
-            _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
-            _proc.Start();
+            try
+            {
+                _proc = new Process();
+                _proc.StartInfo = startInfo;
+                if (OS.IsPosix)
+                {
+                    _proc.StartInfo.FileName = "mono";
+                    _proc.StartInfo.Arguments = " --debug " + _executable + " " + arguments;
+                }
+                else
+                {
+                    _proc.StartInfo.FileName = _executable;
+                    _proc.StartInfo.Arguments = arguments;
+                }
+                _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                _proc.StartInfo.UseShellExecute = !doNotshellExecute;
+                _proc.StartInfo.CreateNoWindow = true;
+                _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
+                //_proc.StartInfo.WorkingDirectory = _executable;
+                _proc.StartInfo.Verb = "runas";
+                _proc.Start();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             var abortListener = new System.Threading.Thread(listenForAborts);
             abortListener.Start();
             _proc.WaitForExit();
@@ -123,19 +134,21 @@ namespace AutoTest.TestRunners.Shared
                 return;
             var results = getResults(_output);
             TestRunProcess.AddResults(results);
+
+
         }
 
         private Thread startChannelListener(string channel)
         {
-			if (OS.IsPosix)
-				return null;
+            if (OS.IsPosix)
+                return null;
             var thread = new Thread(
-                (x) => 
+                (x) =>
                     {
                         _pipeClient = new PipeClient();
                         _pipeClient.Listen(
                                 x.ToString(),
-                                (msg) => 
+                                (msg) =>
                                     {
                                         if (msg == "")
                                             return;
@@ -222,7 +235,9 @@ namespace AutoTest.TestRunners.Shared
 
         private IEnumerable<Plugin> getPlugins(RunOptions options)
         {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners");
+            //var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners");
+            //var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners2");
+            var path = Path.Combine(PluginLocator.GetAutoTestDirectory(), "TestRunners2");
             return new PluginLocator(path).GetPluginsFrom(options);
         }
 

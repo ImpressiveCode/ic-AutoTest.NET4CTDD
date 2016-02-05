@@ -7,6 +7,7 @@ using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Communication;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
+using System.Reflection;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -28,7 +29,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
             var hitPaths = new string[]
                                 {
                                     Path.GetDirectoryName(Assembly),
-                                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)   // TODO CF from NL: change it to be GetAutoTestDirectory (?)
                                 };
 
             hitPaths.ToList().ForEach(x => Logger.Write("Hint path (new): " + x));
@@ -58,8 +59,25 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public PluginLocator()
         {
-            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            _path = Path.Combine(path, "TestRunners");
+            //var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            _path = GetTestRunnersDirectory();
+        }
+
+        private string GetTestRunnersDirectory()
+        {
+            //return Path.Combine(GetAutoTestDirectory(), "TestRunners");
+            return Path.Combine(GetAutoTestDirectory(), "TestRunners2");
+        }
+
+        public static string GetAutoTestDirectory()
+        {
+            //return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AutoTest.NET");
+        }
+
+        private string GetExecutingAssemblyDirectory()
+        {
+            return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
         public PluginLocator(string path)
@@ -69,19 +87,27 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public IEnumerable<Plugin> Locate()
         {
+            //System.Reflection.Assembly a = typeof(PluginLocator).Assembly;
+            //var referencedAssemblies = a.GetReferencedAssemblies();
+            //var codeBase = Assembly.GetExecutingAssembly().GetReferencedAssemblies()[0].CodeBase;
+
+
+
             var plugins = new List<Plugin>();
             var hitPaths = new string[]
-                                {
-                                    _path,
-                                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-                                };
+            {
+                _path,
+                Path.Combine(GetAutoTestDirectory(), "TestRunners"),
+                Path.Combine(GetExecutingAssemblyDirectory(), "TestRunners"),
+            };
             hitPaths.ToList().ForEach(x => Logger.Write("Hint path (locate): " + x));
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 var currentDirectory = Environment.CurrentDirectory;
                 try
                 {
-                    Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    //Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    Environment.CurrentDirectory = GetAutoTestDirectory();
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                         plugins.AddRange(getPlugins(Path.GetFullPath(file)));
@@ -110,7 +136,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
         {
             var assembly = loadAssembly(Path.GetFullPath(file));
             if (assembly == null)
-                return new Plugin[] {};
+                return new Plugin[] { };
             return assembly
                 .GetExportedTypes()
                 .Where(x => x.GetInterfaces().Contains(typeof(IAutoTestNetTestRunner)) && x.GetConstructor(Type.EmptyTypes) != null)

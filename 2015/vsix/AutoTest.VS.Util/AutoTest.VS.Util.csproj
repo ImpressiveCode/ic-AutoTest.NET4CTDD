@@ -95,7 +95,7 @@
       <Name>AutoTest.Messages</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
-      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
+      <Project>{7d34aabb-dd67-4826-ad89-75d91a1375f5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\AutoTest.UI\AutoTest.UI.csproj">

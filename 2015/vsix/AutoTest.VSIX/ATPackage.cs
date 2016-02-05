@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ATPackage.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -128,21 +122,16 @@ namespace AutoTest.VSIX
 
         private void InitializeCommands()
         {
-
             if (MenuCommandService == null)
             {
                 return;
             }
-
-            // TODO CF from NL: VSBuildRunner ??
-            // TODO CF from NL: CommandDispatchers RegisterHandler ??
 
             MenuCommandService.AddCommand(CreateMenuCommand(this.ShowOrHideToolWindow, PackageCommands.FeedbackWindowCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.PauseEngineCallback, PackageCommands.PauseEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.RestartEngineCallback, PackageCommands.RestartEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.BuildAndTestAllProjectsCallback, PackageCommands.BuildAndTestAllProjectsCommandId));
-
         }
 
         private OleMenuCommand CreateMenuCommand(EventHandler hanlder, uint cmdId)
@@ -225,7 +214,7 @@ namespace AutoTest.VSIX
         {
             if (_engine.IsRunning)
             {
-                _engine.Pause(); 
+                _engine.Pause();
             }
         }
 

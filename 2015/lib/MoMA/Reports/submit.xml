@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<report version="1.0">
+  <metadata>
+    <definitions>Mono 2.6</definitions>
+    <momaversion>2.0.0.0</momaversion>
+    <date>2016-02-04 12:35:12Z</date>
+    <name />
+    <email />
+    <homepage />
+    <organization />
+    <comments />
+    <apptype />
+  </metadata>
+  <assemblies>
+    <assembly name="AutoTest.TestRunner.exe" version="1.0.0.0" runtime="2.0" todo="2" niex="0" miss="0" pinv="0">
+      <issue type="todo">
+        <class>SubDomainRunner</class>
+        <caller>void Run(Object)</caller>
+        <method>void set_LoaderOptimization(LoaderOptimization)</method>
+        <raw>System.Void System.AppDomainSetup::set_LoaderOptimization(System.LoaderOptimization)</raw>
+        <data>In Mono this is controlled by the --share-code flag</data>
+      </issue>
+      <issue type="todo">
+        <class>SubDomainRunner</class>
+        <caller>void Run(Object)</caller>
+        <method>AppDomain CreateDomain(string, Evidence, AppDomainSetup)</method>
+        <raw>System.AppDomain System.AppDomain::CreateDomain(System.String,System.Security.Policy.Evidence,System.AppDomainSetup)</raw>
+        <data>Currently it does not allow the setup in the other domain</data>
+      </issue>
+    </assembly>
+  </assemblies>
+</report>

@@ -79,6 +79,7 @@ namespace AutoTest.VSIX.ATEngine
             _configuredCustomOutput = BootStrapper.Services.Locate<IConfiguration>().CustomOutputPath;
             _watcher = BootStrapper.Services.Locate<IDirectoryWatcher>();
             _watcher.Watch(_watchToken);
+            Resume();//
             _control.DebugTest += new EventHandler<UI.DebugTestArgs>(_window_DebugTest);
             _control.SetMessageBus(BootStrapper.Services.Locate<IMessageBus>());
             setCustomOutputPath();

@@ -48,10 +48,10 @@ namespace AutoTest.VSIX
 
             // TODO CF from NL: implement based on ConnectEvents.cs
         }
-        
+
 
         private void _dteEvents_OnStartupComplete()
-       {
+        {
             //MessageBox.Show("_dteEvents_OnStartupComplete handler");
             //throw new NotImplementedException();
             // the event such as Connect.onConnection()
@@ -60,11 +60,12 @@ namespace AutoTest.VSIX
         private void _buildEvents_OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
         {
             var succeeded = _applicationObject.Solution.SolutionBuild.LastBuildInfo == 0;
-            if (_buildRunner != null)
-            {
-                _buildRunner.PusblishBuildErrors();
-            }
-            // TODO CF from NL: Check if this works
+            //if (_buildRunner != null)
+            //{
+            _buildRunner.PusblishBuildErrors();
+            //}
+            // TODO CF from NL: fix testing
+
         }
 
         private void _solutionEvents_Opened()
@@ -72,7 +73,7 @@ namespace AutoTest.VSIX
             try
             {
                 StartFeedbackWindow();
-                
+
                 _WatchToken = _applicationObject.Solution.FullName;
                 SetEngine();
                 _engine.Bootstrap(_WatchToken);
@@ -86,7 +87,6 @@ namespace AutoTest.VSIX
             {
                 Debug.WriteException(exception);
             }
-            // TODO CF from NL: Check if this works
         }
 
         private void StartFeedbackWindow()

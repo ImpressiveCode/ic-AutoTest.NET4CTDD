@@ -26,8 +26,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IBuildSessionRunner _buildRunner;
         private IConfiguration _configuration;
         private ITestRunner[] _testRunners;
-		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
-		private IOptimizeBuildConfiguration _buildOptimizer;
+        private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
+        private IOptimizeBuildConfiguration _buildOptimizer;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
         private List<RunInfo> _abortedBuilds = new List<RunInfo>();
@@ -42,8 +42,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;
-			_testAssemblyValidator = testAssemblyValidator;
-			_buildOptimizer = buildOptimizer;
+            _testAssemblyValidator = testAssemblyValidator;
+            _buildOptimizer = buildOptimizer;
             _preProcessors = preProcessors;
             _removedTestLocator = removedTestLocator;
         }
@@ -136,40 +136,40 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 projects.Add(file.FullName);
             return projects.ToArray();
         }
-		
-		private void testAll(RunInfo[] projectList, RunReport runReport)
-		{
+
+        private void testAll(RunInfo[] projectList, RunReport runReport)
+        {
             Debug.WriteDebug("Running test preprosessor");
             var preProcessed = preProcessTestRun(projectList);
             preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
             Debug.WriteDebug("Done - Running test preprosessor");
             runPreProcessedTestRun(preProcessed, runReport);
-		}
+        }
 
         private void runPreProcessedTestRun(PreProcessedTesRuns preProcessed, RunReport runReport)
-		{
-			foreach (var runner in _testRunners)
+        {
+            foreach (var runner in _testRunners)
             {
                 Debug.WriteDebug("Preparing runner " + runner.GetType().ToString());
-				var runInfos = new List<TestRunInfo>();
+                var runInfos = new List<TestRunInfo>();
                 foreach (var file in preProcessed.RunInfos)
-	            {
-					var project = file.Project;
-					if (hasInvalidAssembly(file))
-						continue;
-	            	var assembly = file.Assembly;	
-					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
-					    continue;
+                {
+                    var project = file.Project;
+                    if (hasInvalidAssembly(file))
+                        continue;
+                    var assembly = file.Assembly;
+                    if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
+                        continue;
                     if (runner.CanHandleTestFor(assembly))
                     {
                         runInfos.Add(file.CloneToTestRunInfo());
                         _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
                     }
-				}
-				if (runInfos.Count > 0)
-				{
+                }
+                if (runInfos.Count > 0)
+                {
                     Debug.WriteDebug("Running tests for runner " + runner.GetType().ToString());
-					runTests(runner, runInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
+                    runTests(runner, runInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
                     if (_exit)
                     {
                         _abortedTestRuns.Clear();
@@ -177,13 +177,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                         Debug.WriteDebug("Aborting test run");
                         return;
                     }
-					
-					var rerunInfos = new List<TestRunInfo>();
-					foreach (var info in runInfos)
-					{
-						if (info.RerunAllTestWhenFinishedForAny())
-							rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
-					}
+
+                    var rerunInfos = new List<TestRunInfo>();
+                    foreach (var info in runInfos)
+                    {
+                        if (info.RerunAllTestWhenFinishedForAny())
+                            rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
+                    }
                     if (rerunInfos.Count > 0)
                     {
                         Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
@@ -196,14 +196,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                             return;
                         }
                     }
-				}
-			}
+                }
+            }
             Debug.WriteDebug("Test run completed");
             if (_exit)
                 return;
             _abortedTestRuns.Clear();
             Debug.WriteDebug("Test run completed and cleaned up");
-		}
+        }
 
         private PreProcessedTesRuns preProcessTestRun(RunInfo[] runInfos)
         {
@@ -212,21 +212,21 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 preProcessed = preProcessor.PreProcess(preProcessed);
             return preProcessed;
         }
-		
-		private bool hasInvalidOutputPath(RunInfo info)
-		{
-			return info.Assembly == null;
-		}
-		
-		private bool hasInvalidAssembly(RunInfo info)
-		{
-			if (info.Assembly == null)
-			{
-				_bus.Publish(new ErrorMessage(string.Format("Assembly was unexpectedly set to null for {0}. Skipping assembly", info.Project.Key)));
-				return true;
-			}
-			return false;
-		}
+
+        private bool hasInvalidOutputPath(RunInfo info)
+        {
+            return info.Assembly == null;
+        }
+
+        private bool hasInvalidAssembly(RunInfo info)
+        {
+            if (info.Assembly == null)
+            {
+                _bus.Publish(new ErrorMessage(string.Format("Assembly was unexpectedly set to null for {0}. Skipping assembly", info.Project.Key)));
+                return true;
+            }
+            return false;
+        }
 
         #endregion
 
@@ -237,10 +237,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             resultList.AddRange(results);
             resultList.AddRange(_removedTestLocator.RemoveUnmatchedRunInfoTests(results, runInfos));
             var modifiedResults = new List<TestRunResults>();
-            
-			foreach (var result in resultList)
-			{
-	            runReport.AddTestRun(
+
+            foreach (var result in resultList)
+            {
+                runReport.AddTestRun(
                     result.Project,
                     result.Assembly,
                     result.TimeSpent,
@@ -250,8 +250,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 var modified = _removedTestLocator.SetRemovedTestsAsPassed(result, runInfos);
                 _bus.Publish(new TestRunMessage(modified));
                 modifiedResults.Add(modified);
-			}
-			informPreProcessor(modifiedResults.ToArray());
+            }
+            informPreProcessor(modifiedResults.ToArray());
         }
 
         private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> processWrapper)
@@ -265,7 +265,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 return new TestRunResults[] { new TestRunResults("", testRunner.GetType().ToString(), false, TestRunner.Any, new TestResult[] { new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Net internal error", ex.ToString()) }) };
             }
         }
-		
+
         private void informPreProcessor(TestRunResults[] results)
         {
             foreach (var preProcess in _preProcessors)

@@ -207,7 +207,8 @@ namespace AutoTest.Core.TestRunners
         {
             if (_identifiers == null)
             {
-                var locator = new PluginLocator(getFullPath("TestRunners"));
+                //var locator = new PluginLocator(getFullPath("TestRunners"));
+                var locator = new PluginLocator(getFullPath("TestRunners2"));
                 var plugins = locator.Locate();
                 _identifiers = plugins
                     .Select(x =>
@@ -224,7 +225,9 @@ namespace AutoTest.Core.TestRunners
 
         private string getFullPath(string chunk)
         {
-            var dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            // path: sth like "C:\\USERS\\NATALIA\\APPDATA\\LOCAL\\MICROSOFT\\VISUALSTUDIO\\14.0EXP\\EXTENSIONS\\CODEFUSION\\AUTOTEST.VSIX\\1.0"
+            //var dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AutoTest.NET");
             return Path.Combine(dir, chunk);
         }
 
