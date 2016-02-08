@@ -71,7 +71,6 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public static string GetAutoTestDirectory()
         {
-            //return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AutoTest.NET");
         }
 
@@ -87,12 +86,6 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public IEnumerable<Plugin> Locate()
         {
-            //System.Reflection.Assembly a = typeof(PluginLocator).Assembly;
-            //var referencedAssemblies = a.GetReferencedAssemblies();
-            //var codeBase = Assembly.GetExecutingAssembly().GetReferencedAssemblies()[0].CodeBase;
-
-
-
             var plugins = new List<Plugin>();
             var hitPaths = new string[]
             {
@@ -106,7 +99,6 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 var currentDirectory = Environment.CurrentDirectory;
                 try
                 {
-                    //Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                     Environment.CurrentDirectory = GetAutoTestDirectory();
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)

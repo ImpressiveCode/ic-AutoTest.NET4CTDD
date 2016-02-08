@@ -21,8 +21,8 @@ namespace AutoTest.TestRunners.Tests
             options.AddTestRun(runner);
             //runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.NUnit.Tests.TestResource\bin\Debug\AutoTest.TestRunners.NUnit.Tests.TestResource.dll"));
             runner.AddAssembly(new AssemblyOptions(@"C:\Users\Natalia\Documents\Repos\ic-AutoTest.NET4CTDD\2015\src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.NUnit.Tests.TestResource\bin\Debug\AutoTest.TestRunners.NUnit.Tests.TestResource.dll"));
-            runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\ClassLibrary1-v40\ClassLibrary1-v40\bin\AutoTest.Net\ClassLibrary1-v40.dll"));
-            //runner.AddAssembly(new AssemblyOptions(@"C:\Users\Natalia\Documents\Visual Studio 2015\Projects\ClassLibrary1\ClassLibrary1\bin\Debug\ClassLibrary1.dll"));
+            //runner.AddAssembly(new AssemblyOptions(@"C:\Users\ack\src\ClassLibrary1-v40\ClassLibrary1-v40\bin\AutoTest.Net\ClassLibrary1-v40.dll"));
+            runner.AddAssembly(new AssemblyOptions(@"C:\Users\Natalia\Documents\Visual Studio 2015\Projects\ClassLibrary1\ClassLibrary1\bin\Debug\ClassLibrary1.dll"));
             //runner = new RunnerOptions("XUnit");
             runner = new RunnerOptions("MSTest");
             options.AddTestRun(runner);

@@ -225,8 +225,6 @@ namespace AutoTest.Core.TestRunners
 
         private string getFullPath(string chunk)
         {
-            // path: sth like "C:\\USERS\\NATALIA\\APPDATA\\LOCAL\\MICROSOFT\\VISUALSTUDIO\\14.0EXP\\EXTENSIONS\\CODEFUSION\\AUTOTEST.VSIX\\1.0"
-            //var dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AutoTest.NET");
             return Path.Combine(dir, chunk);
         }

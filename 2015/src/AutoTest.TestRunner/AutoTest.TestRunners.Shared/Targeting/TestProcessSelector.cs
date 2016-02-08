@@ -20,8 +20,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
 
         public string Get(Platform platform, Version version)
         {
-            var path = Plugins.PluginLocator.GetAutoTestDirectory();   // TODO CF from NL: fix this codesmell
-            //var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = Plugins.PluginLocator.GetAutoTestDirectory();
             var platformString = getPlatformString(platform);
             var frameworkString = getFrameworkString(version);
             return Path.Combine(path, string.Format("AutoTest.TestRunner{0}{1}.exe", platformString, frameworkString));

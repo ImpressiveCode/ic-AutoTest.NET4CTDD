@@ -25,7 +25,7 @@ namespace AutoTest.VSIX.ATEngine
         private string _watchToken;
         private string _configuredCustomOutput;
         private IDirectoryWatcher _watcher;
-        private NewFeedbackWindowControl _window;         // TODO CF from NL: change the type to corresponding one
+        private NewFeedbackWindowControl _window;       
         private FeedbackWindow _control;
         private DTE2 _application;
 

@@ -36,8 +36,11 @@ namespace AutoTest.VSIX
     [Guid(GuidList.guidATPackageString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(AutoTest.VSIX.FeedbackWindowToolPane))]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+    [ProvideToolWindow(typeof(FeedbackWindowToolPane))]
+    [ProvideToolWindowVisibility(typeof(FeedbackWindowToolPane),
+            Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
+
+    //[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     public sealed partial class ATPackage : Package
     {
@@ -96,7 +99,6 @@ namespace AutoTest.VSIX
                 this.SetEngine();
                 this.bindEvents();
                 this.InitializeCommands();
-                // TODO CF from NL: init buildRunner!!!
             }
             catch (Exception exception)
             {
@@ -104,7 +106,7 @@ namespace AutoTest.VSIX
             }
         }
 
-        private void SetEngine()        // TODO CF from NL: fix throwing exception every time during the first load.
+        private void SetEngine()       
         {
             try
             {

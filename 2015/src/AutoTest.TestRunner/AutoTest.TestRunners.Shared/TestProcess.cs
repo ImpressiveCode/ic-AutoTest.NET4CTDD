@@ -114,8 +114,6 @@ namespace AutoTest.TestRunners.Shared
                 _proc.StartInfo.UseShellExecute = !doNotshellExecute;
                 _proc.StartInfo.CreateNoWindow = true;
                 _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
-                //_proc.StartInfo.WorkingDirectory = _executable;
-                _proc.StartInfo.Verb = "runas";
                 _proc.Start();
             }
             catch (Exception)
@@ -235,8 +233,6 @@ namespace AutoTest.TestRunners.Shared
 
         private IEnumerable<Plugin> getPlugins(RunOptions options)
         {
-            //var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners");
-            //var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners2");
             var path = Path.Combine(PluginLocator.GetAutoTestDirectory(), "TestRunners2");
             return new PluginLocator(path).GetPluginsFrom(options);
         }

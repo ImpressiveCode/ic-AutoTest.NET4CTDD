@@ -60,11 +60,8 @@ namespace AutoTest.VSIX
         private void _buildEvents_OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
         {
             var succeeded = _applicationObject.Solution.SolutionBuild.LastBuildInfo == 0;
-            //if (_buildRunner != null)
-            //{
+           
             _buildRunner.PusblishBuildErrors();
-            //}
-            // TODO CF from NL: fix testing
 
         }
 
@@ -105,7 +102,6 @@ namespace AutoTest.VSIX
             {
                 Debug.WriteException(exception);
             }
-            // TODO CF from NL: Check if this works
         }
     }
 }

@@ -30,7 +30,7 @@ Source: "..\ReleaseBinaries\AutoTest.UI.dll"; DestDir: "{app}"; Flags: ignorever
 Source: "..\ReleaseBinaries\AutoTest.Console.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.License.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.WinForms.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\ReleaseBinaries\README"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\README"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\ReleaseBinaries\AutoTest.VS.Util.dll"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\AutoTest.VSAddin.dll"; DestDir: "{app}"; Flags: ignoreversion;
