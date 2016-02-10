@@ -34,3 +34,4 @@ AutoTest.config.old
 /AutoTest.NET.sln.DotSettings.user
 Backup/
 2015/.vs
+!/lib/*.dll
