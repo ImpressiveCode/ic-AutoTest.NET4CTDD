@@ -1,88 +1,71 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using EnvDTE80;
-using AutoTest.Core.DebugLog;
-using AutoTest.VS.Util.Builds;
-using EnvDTE;
-using System.IO;
-
-namespace AutoTest.VSIX
+﻿namespace AutoTest.VSIX
 {
-    /// <summary>
-    /// This is the class that implements the package exposed by this assembly.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The minimum requirement for a class to be considered a valid package for Visual Studio
-    /// is to implement the IVsPackage interface and register itself with the shell.
-    /// This package uses the helper classes defined inside the Managed Package Framework (MPF)
-    /// to do it: it derives from the Package class that provides the implementation of the
-    /// IVsPackage interface and uses the registration attributes defined in the framework to
-    /// register itself and its components with the shell. These attributes tell the pkgdef creation
-    /// utility what data to put into .pkgdef file.
-    /// </para>
-    /// <para>
-    /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
-    /// </para>
-    /// </remarks>
+    #region Usings
+    using System;
+    using System.ComponentModel.Design;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using AutoTest.Core.DebugLog;
+    using AutoTest.VS.Util.Builds;
+    using EnvDTE;
+    using EnvDTE80;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Engine = AutoTest.VSIX.ATEngine.Engine;
+    using Thread = System.Threading.Thread;
+
+    #endregion
+
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [Guid(GuidList.guidATPackageString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(FeedbackWindowToolPane))]
-    [ProvideToolWindowVisibility(typeof(FeedbackWindowToolPane),
-            Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
-
-    //[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+    [ProvideToolWindowVisibility(typeof(FeedbackWindowToolPane), UIContextGuids80.SolutionExists)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
-    public sealed partial class ATPackage : Package
+    public sealed partial class AtPackage : Package
     {
         private DTE2 _dte;
 
         private OleMenuCommandService _menuCommandService;
+
         private NewFeedbackWindowControl _toolWindow;
+
         private FeedbackWindow _control;
+
         private VSBuildRunner _buildRunner;
+
         private ToolWindowPane _window;
 
         public static string _WatchToken;
-        public static ATEngine.Engine _engine;
+
+        public static Engine _engine;
 
         private DTE2 _applicationObject
         {
-            get { return _dte ?? (_dte = GetService(typeof(DTE)) as DTE2); }
+            get
+            {
+                return _dte ?? (_dte = GetService(typeof(DTE)) as DTE2);
+            }
         }
 
         public OleMenuCommandService MenuCommandService
         {
-            get { return _menuCommandService ?? (_menuCommandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService); }
+            get
+            {
+                return _menuCommandService ?? (_menuCommandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService);
+            }
         }
 
-        private System.IServiceProvider ServiceProvider
+        private IServiceProvider ServiceProvider
         {
             get
             {
                 return this;
             }
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ATPackage"/> class.
-        /// </summary>
-        public ATPackage()
-        {
-            // Inside this method you can place any initialization code that does not require
-            // any Visual Studio service because at this point the package object is created but
-            // not sited yet inside Visual Studio environment. The place to do all the other
-            // initialization is the Initialize method.
         }
 
         #region Package Members
@@ -97,8 +80,11 @@ namespace AutoTest.VSIX
             try
             {
                 this.SetEngine();
-                this.bindEvents();
+
+                this.BindEvents();
                 this.InitializeCommands();
+
+                _buildRunner = new VSBuildRunner(_applicationObject, () => { return !_engine.IsRunning; }, (s) => _engine.SetCustomOutputPath(s), (o) => _control.Consume(o), (s) => _control.ClearBuilds(s));
             }
             catch (Exception exception)
             {
@@ -106,15 +92,18 @@ namespace AutoTest.VSIX
             }
         }
 
-        private void SetEngine()       
+        private void SetEngine()
         {
             try
             {
                 if (_control != null)
                 {
-                    _engine = new ATEngine.Engine(_control, _applicationObject);
+                    _engine = new Engine(_control, _applicationObject);
                 }
-                else _engine = new ATEngine.Engine(null, _applicationObject);
+                else
+                {
+                    _engine = new Engine(null, _applicationObject);
+                }
             }
             catch (Exception exception)
             {
@@ -130,10 +119,10 @@ namespace AutoTest.VSIX
             }
 
             MenuCommandService.AddCommand(CreateMenuCommand(this.ShowOrHideToolWindow, PackageCommands.FeedbackWindowCommandId));
-            MenuCommandService.AddCommand(CreateMenuCommand(this.ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
-            MenuCommandService.AddCommand(CreateMenuCommand(this.PauseEngineCallback, PackageCommands.PauseEngineCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(ResumeEngineCallback, PackageCommands.ResumeEngineCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(PauseEngineCallback, PackageCommands.PauseEngineCommandId));
             MenuCommandService.AddCommand(CreateMenuCommand(this.RestartEngineCallback, PackageCommands.RestartEngineCommandId));
-            MenuCommandService.AddCommand(CreateMenuCommand(this.BuildAndTestAllProjectsCallback, PackageCommands.BuildAndTestAllProjectsCommandId));
+            MenuCommandService.AddCommand(CreateMenuCommand(BuildAndTestAllProjectsCallback, PackageCommands.BuildAndTestAllProjectsCommandId));
         }
 
         private OleMenuCommand CreateMenuCommand(EventHandler hanlder, uint cmdId)
@@ -153,8 +142,9 @@ namespace AutoTest.VSIX
                 return;
             }
 
-            if (_applicationObject.Solution.IsOpen)       //solution open
+            if (_applicationObject.Solution.IsOpen)
             {
+                // solution open
                 switch (command.CommandID.ID)
                 {
                     case PackageCommands.RestartEngineCommandId:
@@ -163,22 +153,31 @@ namespace AutoTest.VSIX
                         break;
 
                     case PackageCommands.ResumeEngineCommandId:
-                        if (!_engine.IsRunning) command.Enabled = true;
+                        if (!_engine.IsRunning)
+                        {
+                            command.Enabled = true;
+                        }
+
                         break;
 
                     case PackageCommands.PauseEngineCommandId:
-                        if (_engine.IsRunning) command.Enabled = true;
+                        if (_engine.IsRunning)
+                        {
+                            command.Enabled = true;
+                        }
+
                         break;
                 }
             }
-            else if (command.CommandID.ID != PackageCommands.FeedbackWindowCommandId)  // not feedback 
+            else if (command.CommandID.ID != PackageCommands.FeedbackWindowCommandId)
             {
-                //disable command
+                // not feedback 
+                // disable command
                 command.Enabled = false;
             }
         }
 
-        #region Callback Methods
+        #region Callback Methods        
 
         /// <summary>
         /// Shows the tool window when the menu item is clicked.
@@ -198,21 +197,25 @@ namespace AutoTest.VSIX
 
             if (windowFrame.IsVisible() == VSConstants.S_OK)
             {
-                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Hide());
+                ErrorHandler.ThrowOnFailure(windowFrame.Hide());
             }
             else
             {
-                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                ErrorHandler.ThrowOnFailure(windowFrame.Show());
             }
 
             if (_window.Content != null)
             {
                 _toolWindow = _window.Content as NewFeedbackWindowControl;
-                _control = _toolWindow.WindowsFormsHost.Child as FeedbackWindow;
+
+                if (_toolWindow != null)
+                {
+                    _control = _toolWindow.WindowsFormsHost.Child as FeedbackWindow;
+                }
             }
         }
 
-        private void PauseEngineCallback(object sender, EventArgs e)
+        private static void PauseEngineCallback(object sender, EventArgs e)
         {
             if (_engine.IsRunning)
             {
@@ -220,7 +223,7 @@ namespace AutoTest.VSIX
             }
         }
 
-        private void ResumeEngineCallback(object sender, EventArgs e)
+        private static void ResumeEngineCallback(object sender, EventArgs e)
         {
             if (!_engine.IsRunning)
             {
@@ -230,15 +233,15 @@ namespace AutoTest.VSIX
 
         private void RestartEngineCallback(object sender, EventArgs e)
         {
-            if (Directory.Exists(getWatchDirectory()))
+            if (Directory.Exists(GetWatchDirectory()))
             {
-                _solutionEvents_AfterClosing();
-                System.Threading.Thread.Sleep(500);
-                _solutionEvents_Opened();
+                SolutionEvents_AfterClosing();
+                Thread.Sleep(500);
+                this.SolutionEvents_Opened();
             }
         }
 
-        private void BuildAndTestAllProjectsCallback(object sender, EventArgs e)
+        private static void BuildAndTestAllProjectsCallback(object sender, EventArgs e)
         {
             if (_engine.IsRunning)
             {
@@ -248,10 +251,13 @@ namespace AutoTest.VSIX
 
         #endregion
 
-        private string getWatchDirectory()
+        private static string GetWatchDirectory()
         {
             if (_WatchToken == null)
-                return "";
+            {
+                return string.Empty;
+            }
+
             return Path.GetDirectoryName(_WatchToken);
         }
 

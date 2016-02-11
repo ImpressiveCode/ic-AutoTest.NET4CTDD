@@ -1,71 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EnvDTE80;
-using EnvDTE;
-using AutoTest.Core.DebugLog;
-using AutoTest.VS.Util.Builds;
-using System.Windows.Forms;
-
-namespace AutoTest.VSIX
+﻿namespace AutoTest.VSIX
 {
-    public partial class ATPackage
+    #region Usings
+    using System;
+    using System.ComponentModel.Design;
+    using AutoTest.Core.DebugLog;
+    using EnvDTE;
+
+    #endregion
+
+    public partial class AtPackage
     {
-        private Events _events;
-        private DTEEvents _dteEvents;
-        private BuildEvents _buildEvents;
-        private SolutionEvents _solutionEvents;
+        private Events events;
 
-        private void bindEvents()
+        private BuildEvents buildEvents;
+
+        private SolutionEvents solutionEvents;
+
+        private void BindEvents()
         {
-            _events = _applicationObject.Events;
+            this.events = _applicationObject.Events;
 
-            bindDTEEvents();
-            bindBuildEvents();
-            bindSolutionEvents();
+            this.BindBuildEvents();
+            this.BindSolutionEvents();
         }
 
-        private void bindDTEEvents()
+    
+        private void BindBuildEvents()
         {
-            _dteEvents = _events.DTEEvents;
-            _dteEvents.OnStartupComplete += _dteEvents_OnStartupComplete;
+            this.buildEvents = this.events.BuildEvents;
+            this.buildEvents.OnBuildDone += _buildEvents_OnBuildDone;
         }
 
-        private void bindBuildEvents()
+        private void BindSolutionEvents()
         {
-            _buildEvents = _events.BuildEvents;
-            _buildEvents.OnBuildDone += _buildEvents_OnBuildDone;
-        }
+            this.solutionEvents = this.events.SolutionEvents;
 
-        private void bindSolutionEvents()
-        {
-            _solutionEvents = _events.SolutionEvents;
-
-            _solutionEvents.Opened += _solutionEvents_Opened;
-            _solutionEvents.AfterClosing += _solutionEvents_AfterClosing;
+            this.solutionEvents.Opened += this.SolutionEvents_Opened;
+            this.solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
 
             // TODO CF from NL: implement based on ConnectEvents.cs
         }
-
-
-        private void _dteEvents_OnStartupComplete()
+       
+        private void _buildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            //MessageBox.Show("_dteEvents_OnStartupComplete handler");
-            //throw new NotImplementedException();
-            // the event such as Connect.onConnection()
-        }
-
-        private void _buildEvents_OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
-        {
-            var succeeded = _applicationObject.Solution.SolutionBuild.LastBuildInfo == 0;
-           
             _buildRunner.PusblishBuildErrors();
-
         }
 
-        private void _solutionEvents_Opened()
+        private void SolutionEvents_Opened()
         {
             try
             {
@@ -76,9 +57,13 @@ namespace AutoTest.VSIX
                 _engine.Bootstrap(_WatchToken);
 
                 if (_engine.IsRunning)
+                {
                     _control.SetText("Engine is running and waiting for changes");
+                }
                 else
+                {
                     _control.SetText("Engine is paused and will not detect changes");
+                }
             }
             catch (Exception exception)
             {
@@ -88,11 +73,11 @@ namespace AutoTest.VSIX
 
         private void StartFeedbackWindow()
         {
-            var commandId = new System.ComponentModel.Design.CommandID(GuidList.guidATPackageCmdSet, (int)PackageCommands.FeedbackWindowCommandId);
+            var commandId = new CommandID(GuidList.guidATPackageCmdSet, PackageCommands.FeedbackWindowCommandId);
             MenuCommandService.GlobalInvoke(commandId);
         }
 
-        private void _solutionEvents_AfterClosing()
+        private static void SolutionEvents_AfterClosing()
         {
             try
             {
