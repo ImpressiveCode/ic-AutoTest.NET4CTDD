@@ -68,6 +68,7 @@ IF NOT EXIST "%DEPLOYDIR%" (
   del  %DEPLOYDIR%\* /Q
 )
 
+copy "%BINARYDIR%\AutoTest.VSIX.vsix" "%DEPLOYDIR%\AutoTest.VSIX.vsix"
 copy "%BINARYDIR%\AutoTest.Messages.dll" "%DEPLOYDIR%\AutoTest.Messages.dll"
 copy "%BINARYDIR%\AutoTest.Core.dll" "%DEPLOYDIR%\AutoTest.Core.dll"
 copy "%BINARYDIR%\AutoTest.Console.exe" "%DEPLOYDIR%\AutoTest.Console.exe"

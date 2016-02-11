@@ -40,10 +40,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>

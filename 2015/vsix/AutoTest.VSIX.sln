@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MSpec.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestRunner", "TestRunner", "{40CD35B5-CA5C-43BD-9E63-EE3F52073D4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.VSAddin", "AutoTest.VSAddin\AutoTest.VSAddin.csproj", "{D46ADD6B-B8BF-460D-973C-D5BB001A158D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -341,6 +343,18 @@ Global
 		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|x86.ActiveCfg = Release|Any CPU
 		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|x86.Build.0 = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|x86.Build.0 = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|x86.ActiveCfg = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

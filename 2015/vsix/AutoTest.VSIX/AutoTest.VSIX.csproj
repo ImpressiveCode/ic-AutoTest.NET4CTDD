@@ -247,6 +247,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.14.1.24720\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VSSDK.BuildTools.14.1.24720\build\Microsoft.VSSDK.BuildTools.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.14.1.24720\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.14.1.24720\build\Microsoft.VSSDK.BuildTools.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).vsix" "$(SolutionDir)..\build_outputAnyCPU\AutoTest.NET\AutoTest.VSIX.vsix"
+copy /Y "$(TargetDir)$(TargetName).vsix" "$(SolutionDir)..\build_outputAnyCPU\AutoTest.NET\AutoTest.VSIX.vsix"
+copy /Y "$(TargetDir)$(TargetName).vsix" "$(SolutionDir)..\build_outputAnyCPU\AutoTest.NET\AutoTest.VSIX.vsix"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
