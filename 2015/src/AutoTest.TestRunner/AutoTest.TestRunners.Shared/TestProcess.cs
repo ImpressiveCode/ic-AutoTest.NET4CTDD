@@ -233,7 +233,7 @@ namespace AutoTest.TestRunners.Shared
 
         private IEnumerable<Plugin> getPlugins(RunOptions options)
         {
-            var path = Path.Combine(PluginLocator.GetAutoTestDirectory(), "TestRunners2");
+            var path = Path.Combine(PluginLocator.GetAutoTestDirectory(), "TestRunners");
             return new PluginLocator(path).GetPluginsFrom(options);
         }
 

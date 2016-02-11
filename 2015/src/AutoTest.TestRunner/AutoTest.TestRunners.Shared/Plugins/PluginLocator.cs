@@ -66,7 +66,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
         private string GetTestRunnersDirectory()
         {
             //return Path.Combine(GetAutoTestDirectory(), "TestRunners");
-            return Path.Combine(GetAutoTestDirectory(), "TestRunners2");
+            return Path.Combine(GetAutoTestDirectory(), "TestRunners");
         }
 
         public static string GetAutoTestDirectory()
@@ -102,7 +102,16 @@ namespace AutoTest.TestRunners.Shared.Plugins
                     Environment.CurrentDirectory = GetAutoTestDirectory();
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
-                        plugins.AddRange(getPlugins(Path.GetFullPath(file)));
+                    {
+                        try
+                        {
+                            plugins.AddRange(getPlugins(Path.GetFullPath(file)));
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+
+                        }
+                    }
                 }
                 finally
                 {
@@ -161,6 +170,14 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            var assemblyName = new AssemblyName(args.Name);
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(item => item.GetName().Name == assemblyName.Name);
+
+            if (assembly != null)
+            {
+                return assembly;
+            }
+
             if (_assemblyCache.ContainsKey(args.Name))
             {
                 if (_assemblyCache[args.Name] == "NotFound")
@@ -168,8 +185,11 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 else
                     return System.Reflection.Assembly.LoadFrom(_assemblyCache[args.Name]);
             }
+            
             foreach (var directory in _directories)
             {
+                if (!Directory.Exists(directory)) continue;
+
                 var file = Directory.GetFiles(directory).Where(f => isMissingAssembly(args, f)).Select(x => x).FirstOrDefault();
                 if (file == null)
                     continue;

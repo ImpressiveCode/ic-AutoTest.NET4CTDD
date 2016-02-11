@@ -208,7 +208,7 @@ namespace AutoTest.Core.TestRunners
             if (_identifiers == null)
             {
                 //var locator = new PluginLocator(getFullPath("TestRunners"));
-                var locator = new PluginLocator(getFullPath("TestRunners2"));
+                var locator = new PluginLocator(getFullPath("TestRunners"));
                 var plugins = locator.Locate();
                 _identifiers = plugins
                     .Select(x =>
