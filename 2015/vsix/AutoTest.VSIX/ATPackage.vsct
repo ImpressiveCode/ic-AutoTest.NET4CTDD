@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidATPackage">
+	<Menus>
+	  <Menu guid="guidATPackageCmdSet" id="MyMenu">
+		<Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
+		<Strings>
+		  <ButtonText>AutoTest.NET</ButtonText>
+		  <CommandName>AutoTest.NET</CommandName>
+		</Strings>
+	  </Menu>
+	</Menus>
+
+	<Groups>
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup1" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup2" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup3" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+
+	  <Group guid="guidATPackageCmdSet" id="MyMenuGroup4" priority="0x0600">
+		<Parent guid="guidATPackageCmdSet" id="MyMenu" />
+	  </Group>
+	</Groups>
+
+	<Buttons>
+
+	  <Button guid="guidATPackageCmdSet" id="FeedbackWindowCommandId" priority="0x0102" type="Button">
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup1" />
+		<Strings>
+		  <ButtonText>Feedback Window</ButtonText>
+		</Strings>
+	  </Button>
+	  
+	  <Button guid="guidATPackageCmdSet" id="RestartEngineCommandId" priority="0x0103" type="Button">
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup2" />
+		<Strings>
+		  <ButtonText>Restart Engine</ButtonText>
+		</Strings>
+	  </Button>
+	  
+	  <Button guid="guidATPackageCmdSet" id="ResumeEngineCommandId" priority="0x0104" type="Button">
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup3" />
+		<CommandFlag>DynamicVisibility</CommandFlag>
+		<Strings>
+		  <ButtonText>Resume Engine</ButtonText>
+		</Strings>
+	  </Button>
+	  
+	  <Button guid="guidATPackageCmdSet" id="PauseEngineCommandId" priority="0x0105" type="Button">
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup3" />
+		<Strings>
+		  <ButtonText>Pause Engine</ButtonText>
+		</Strings>
+	  </Button>
+	  
+	  <Button guid="guidATPackageCmdSet" id="BuildAndTestAllProjectsCommandId" priority="0x0106" type="Button">
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup4" />
+		<Strings>
+		  <ButtonText>
+			<ButtonText>Build And Test All Projects</ButtonText>
+		  </ButtonText>
+		</Strings>
+	  </Button>
+	  
+	
+	  <!--<Button guid="guidATPackageCmdSet" id="cmdidMyFeedbackWindowCommand" priority="0x0100" type="Button">
+		--><!--<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />--><!--
+		<Parent guid="guidATPackageCmdSet" id="MyMenuGroup1" />
+		<Icon guid="guidImages1" id="bmpPic1" />
+		<Strings>
+		  <ButtonText>MyFeedbackWindow</ButtonText>
+		</Strings>
+	  </Button>-->
+	  
+	</Buttons>
+  </Commands>
+
+  <KeyBindings>
+	<KeyBinding guid="guidATPackageCmdSet" id="FeedbackWindowCommandId" key1="J" mod1="CONTROL" mod2="SHIFT" editor="guidVSStd97" />
+
+	<KeyBinding guid="guidATPackageCmdSet" id="BuildAndTestAllProjectsCommandId" key1="Y" key2="A" mod1="CONTROL" mod2="SHIFT" editor="guidVSStd97" />
+  </KeyBindings>
+  
+  <Symbols>
+	<!-- This is the package guid. -->
+	<GuidSymbol name="guidATPackage" value="{ede7c1ba-e6f6-4ea9-9a84-acbe05bb069a}" />
+
+	<!-- This is the guid used to group the menu commands together -->
+	<GuidSymbol name="guidATPackageCmdSet" value="{f3f72632-3886-4ddb-b392-6a9008625478}">
+	  <IDSymbol name="MyMenu" value="0x1020" />
+	  <IDSymbol name="MyMenuGroup1" value="0x1021" />
+	  <IDSymbol name="MyMenuGroup2" value="0x1022" />
+	  <IDSymbol name="MyMenuGroup3" value="0x1023" />
+	  <IDSymbol name="MyMenuGroup4" value="0x1024" />
+	  
+	  <!-- commands definitions (must be the same as in PackageCommands class-->
+	  <IDSymbol name="FeedbackWindowCommandId" value="0x1101" />
+	  <IDSymbol name="RestartEngineCommandId" value="0x1102" />
+	  <IDSymbol name="ResumeEngineCommandId" value="0x1103" />
+	  <IDSymbol name="PauseEngineCommandId" value="0x1104" />
+	  <IDSymbol name="BuildAndTestAllProjectsCommandId" value="0x1105" />
+	  <!--<IDSymbol value="4358" name="cmdidMyFeedbackWindowCommand" />-->
+	</GuidSymbol>
+	
+  
+	<GuidSymbol value="{1f8c2b8b-0a8a-43ea-be95-cd51bbefbb95}" name="guidImages">
+	  <IDSymbol name="bmpPic1" value="1" />
+	  <IDSymbol name="bmpPic2" value="2" />
+	  <IDSymbol name="bmpPicSearch" value="3" />
+	  <IDSymbol name="bmpPicX" value="4" />
+	  <IDSymbol name="bmpPicArrows" value="5" />
+	  <IDSymbol name="bmpPicStrikethrough" value="6" />
+	</GuidSymbol>
+  
+	<GuidSymbol value="{684030e3-ee21-4136-8107-051b59fd4053}" name="guidImages1">
+	  <IDSymbol name="bmpPic1" value="1" />
+	  <IDSymbol name="bmpPic2" value="2" />
+	  <IDSymbol name="bmpPicSearch" value="3" />
+	  <IDSymbol name="bmpPicX" value="4" />
+	  <IDSymbol name="bmpPicArrows" value="5" />
+	  <IDSymbol name="bmpPicStrikethrough" value="6" />
+	</GuidSymbol>
+  </Symbols>
+</CommandTable>

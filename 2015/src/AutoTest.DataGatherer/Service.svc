@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="AutoTest.Net.DataGatherer.Service" CodeBehind="Service.svc.cs" %>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/AutoTest.Net.DataGatherer" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/AutoTest.Net.DataGatherer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="LogData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AutoTestEngineRunning" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AutoTestNetVersionNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NumberOfBuildsFailed" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfBuildsSucceeded" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfProjectsBuilt" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfTestsFailed" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfTestsIgnored" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfTestsPassed" type="xs:int" />
+      <xs:element minOccurs="0" name="NumberOfTestsRan" type="xs:int" />
+      <xs:element minOccurs="0" name="SolutionName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StationName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TestRunnerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LogData" nillable="true" type="tns:LogData" />
+</xs:schema>
